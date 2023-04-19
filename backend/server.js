@@ -1,3 +1,4 @@
+/*
 import express from "express";
 import createHttpError from "http-errors";
 import path from "path";
@@ -9,28 +10,32 @@ import homeRoutes from "./routes/home.js";
 import gamesRoutes from "./routes/games.js";
 import lobbyRoutes from "./routes/lobby.js";
 import authenticationRoutes from "./routes/authentication.js";
+*/
 
 const express = require("express");
 const createHttpError = require("http-errors");
 const path = require("path");
 const session = require("express-session");
-const pgSession = require("connect-pg-simple")(session);
-const addSessionLocals = require("./middleware/add-session-locals.js");
-const isAuthenticated = require("./middleware/is-authenticated.js");
-const initSockets = require("./sockets/initialize.js");
-
+const livereload = require("livereload");
+const connectLivereload = require("connect-livereload");
 const morgan = require("morgan");
 const cookieParser = require("cookie-parser");
 
+const pgSession = require("connect-pg-simple")(session);
+
+//const addSessionLocals = require("./middleware/add-session-locals.js");
+//const isAuthenticated = require("./middleware/is-authenticated.js");
+//const initSockets = require("./sockets/initialize.js");
+
 require("dotenv").config();
-const db = require("./db/connection.js");
+//const db = require("./db/connection.js");
 
 const homeRoutes = require("./routes/static/home.js");
 const gamesRoutes = require("./routes/static/games.js");
 const lobbyRoutes = require("./routes/static/lobby.js");
 const authenticationRoutes = require("./routes/static/authentication.js");
-const testRoutes = require("./routes/static/test.js");
-const chatRoutes = require("./routes/static/chat.js");
+//const testRoutes = require("./routes/static/test.js");
+//const chatRoutes = require("./routes/static/chat.js");
 
 const app = express();
 app.use(morgan("dev"));
@@ -50,7 +55,7 @@ if (process.env.NODE_ENV === "development") {
   app.use(connectLivereload());
 }
 
-const Port = process.env.PORT || 3000;
+const port = process.env.PORT || 3000;
 
 app.set("views", path.join(".", "backend", "views"));
 app.set("view engine", "ejs");
@@ -62,8 +67,8 @@ app.use("/games", gamesRoutes);
 app.use("/lobby", lobbyRoutes);
 app.use("/authentication", authenticationRoutes);
 
-app.listen(Port, () => {
-  console.log(`Server started on port ${Port}`);
+app.listen(port, () => {
+  console.log(`Server started on port ${port}`);
 });
 
 app.use((_request, _response, next) => {

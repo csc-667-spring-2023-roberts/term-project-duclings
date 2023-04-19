@@ -1,4 +1,4 @@
-import express from "express";
+const express = require("express");
 
 const router = express.Router();
 
@@ -8,4 +8,4 @@ router.get("/:id", (req, res) => {
   res.render("games", { id, title: "Steven's term project" });
 });
 
-export default router;
+module.exports = router;
