@@ -20,8 +20,7 @@ const homeRoutes = require("./routes/static/home.js");
 const gamesRoutes = require("./routes/static/games.js");
 const lobbyRoutes = require("./routes/static/lobby.js");
 const authenticationRoutes = require("./routes/static/authentication.js");
-//const testRoutes = require("./routes/static/test.js");
-//const chatRoutes = require("./routes/static/chat.js");
+const chatRoutes = require("./routes/static/chat.js");
 
 const app = express();
 app.use(morgan("dev"));
