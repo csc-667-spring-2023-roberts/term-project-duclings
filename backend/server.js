@@ -1,34 +1,20 @@
-/*
-import express from "express";
-import createHttpError from "http-errors";
-import path from "path";
-import livereload from "livereload";
-import connectLivereload from "connect-livereload";
-import morgan from "morgan";
-import cookieParser from "cookie-parser";
-import homeRoutes from "./routes/home.js";
-import gamesRoutes from "./routes/games.js";
-import lobbyRoutes from "./routes/lobby.js";
-import authenticationRoutes from "./routes/authentication.js";
-*/
-
 const express = require("express");
 const createHttpError = require("http-errors");
 const path = require("path");
-const session = require("express-session");
 const livereload = require("livereload");
 const connectLivereload = require("connect-livereload");
 const morgan = require("morgan");
-const cookieParser = require("cookie-parser");
 
+const session = require("express-session");
+const cookieParser = require("cookie-parser");
 const pgSession = require("connect-pg-simple")(session);
+const db = require("./db/connection.js");
 
 //const addSessionLocals = require("./middleware/add-session-locals.js");
 //const isAuthenticated = require("./middleware/is-authenticated.js");
-//const initSockets = require("./sockets/initialize.js");
+const initSockets = require("./sockets/init.js");
 
 require("dotenv").config();
-//const db = require("./db/connection.js");
 
 const homeRoutes = require("./routes/static/home.js");
 const gamesRoutes = require("./routes/static/games.js");
@@ -55,6 +41,22 @@ if (process.env.NODE_ENV === "development") {
   app.use(connectLivereload());
 }
 
+/* After app creation and standard setup */
+// Creating a table to store session information to database
+app.use(cookieParser());
+
+const sessionMiddleware = session({
+  store: new pgSession({ pgPromise: db }),
+  secret: process.env.SECRET,
+  resave: false,
+  saveUninitialized: false,
+  cookie: { maxAge: 1000 * 60 * 60 * 24 * 7 },
+});
+
+app.use(sessionMiddleware);
+const server = initSockets(app, sessionMiddleware);
+
+// App setup (?)
 const port = process.env.PORT || 3000;
 
 app.set("views", path.join(".", "backend", "views"));
@@ -67,8 +69,8 @@ app.use("/games", gamesRoutes);
 app.use("/lobby", lobbyRoutes);
 app.use("/authentication", authenticationRoutes);
 
-app.listen(port, () => {
-  console.log(`Server started on port ${port}`);
+server.listen(PORT, () => {
+  console.log(`Server started on port ${PORT}`);
 });
 
 app.use((_request, _response, next) => {
