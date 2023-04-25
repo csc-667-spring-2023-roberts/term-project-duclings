@@ -5,12 +5,16 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node ./server.js",
+    "start": "node ./backend/server.js",
     "start:dev": "concurrently \"npm:server:dev\" \"npm:build:dev\"",
-    "server:dev": "NODE_ENV=development nodemon -e js,pug --watch backend ./server.js",
+    "server:dev": "set NODE_ENV=development && nodemon -e js,ejs --watch backend ./backend/server.js",
     "build": "webpack",
     "build:dev": "webpack --watch",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "db:create": "node-pg-migrate create -- ",
+    "db:migrate": "node-pg-migrate up",
+    "db:rollback": "node-pg-migrate down",
+    "postinstall": "npm run db:migrate"
   },
   "repository": {
     "type": "git",
@@ -22,15 +26,31 @@
   "bugs": {
     "url": "https://github.com/csc-667-spring-2023-roberts/term-project-duclings/issues"
   },
+  "lint-staged": {
+    "**/*": "prettier --write --ignore-unknown",
+    "frontend/**/*.js": "webpack"
+  },
   "homepage": "https://github.com/csc-667-spring-2023-roberts/term-project-duclings#readme",
   "dependencies": {
+    "bcrypt": "^5.1.0",
+    "connect-pg-simple": "^8.0.0",
     "cookie-parser": "^1.4.6",
+    "dotenv": "^16.0.3",
+    "ejs": "^3.1.9",
     "express": "^4.18.2",
+    "express-session": "^1.17.3",
+    "http": "^0.0.1-security",
     "http-errors": "^2.0.0",
     "morgan": "^1.10.0",
-    "pug": "^3.0.2"
+    "node-pg-migrate": "^6.2.2",
+    "pg": "^8.10.0",
+    "pg-promise": "^11.4.3",
+    "prettier": "^2.8.4",
+    "socket.io": "^4.6.1",
+    "socket.io-client": "^4.6.1"
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.21.4",
     "babel-loader": "^9.1.2",
     "concurrently": "^7.6.0",
     "connect-livereload": "^0.6.1",
