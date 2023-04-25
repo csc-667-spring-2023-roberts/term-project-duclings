@@ -59,6 +59,6 @@
     "livereload": "^0.9.3",
     "nodemon": "^2.0.21",
     "webpack": "^5.76.2",
-    "webpack-cli": "^5.0.1"
+    "webpack-cli": "^5.0.2"
   }
 }
