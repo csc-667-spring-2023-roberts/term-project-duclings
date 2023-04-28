@@ -20,7 +20,7 @@ router.post("/sign-up", async (request, response) => {
   const hash = await bcrypt.hash(password, salt);
 
   try {
-    const { id } = Users.create(username, email, password);
+    const { id } = Users.create(username, email, hash);
     request.session.user = {
       id,
       username,
@@ -51,7 +51,14 @@ router.post("/login", async (request, response) => {
 
   try {
     const { id, username, password: hash } = await Users.findByEmail(email);
-    const isValidUser = await bcrypt.compare(password, user.password);
+    const isValidUser = await bcrypt.compare(password, hash.trim());
+
+    console.log("password is ()" + password + "()");
+    console.log("hash is ()" + hash + "()");
+    console.log("isValidUser is " + isValidUser);
+
+    console.log("id is " + id);
+    console.log("username is " + username);
 
     if (isValidUser) {
       request.session.user = {
