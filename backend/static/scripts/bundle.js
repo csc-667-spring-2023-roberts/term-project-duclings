@@ -19,9 +19,9 @@
   t.r(e),
     t.d(e, {
       Decoder: () => at,
-      Encoder: () => ht,
-      PacketType: () => ot,
-      protocol: () => rt,
+      Encoder: () => ot,
+      PacketType: () => rt,
+      protocol: () => it,
     });
   const s = Object.create(null);
   (s.open = "0"),
@@ -41,7 +41,7 @@
       ("undefined" != typeof Blob &&
         "[object BlobConstructor]" === Object.prototype.toString.call(Blob)),
     o = "function" == typeof ArrayBuffer,
-    h = (t, e) => {
+    a = (t, e) => {
       const s = new FileReader();
       return (
         (s.onload = function () {
@@ -51,29 +51,33 @@
         s.readAsDataURL(t)
       );
     },
-    a = ({ type: t, data: e }, n, i) => {
+    h = ({ type: t, data: e }, n, i) => {
       return r && e instanceof Blob
         ? n
           ? i(e)
-          : h(e, i)
+          : a(e, i)
         : o &&
           (e instanceof ArrayBuffer ||
-            ((a = e),
+            ((h = e),
             "function" == typeof ArrayBuffer.isView
-              ? ArrayBuffer.isView(a)
-              : a && a.buffer instanceof ArrayBuffer))
+              ? ArrayBuffer.isView(h)
+              : h && h.buffer instanceof ArrayBuffer))
         ? n
           ? i(e)
-          : h(new Blob([e]), i)
+          : a(new Blob([e]), i)
         : i(s[t] + (e || ""));
-      var a;
+      var h;
     },
-    c = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/",
-    p = "undefined" == typeof Uint8Array ? [] : new Uint8Array(256);
-  for (let t = 0; t < c.length; t++) p[c.charCodeAt(t)] = t;
-  const u = "function" == typeof ArrayBuffer,
-    l = (t, e) => {
-      if (u) {
+    c = "undefined" == typeof Uint8Array ? [] : new Uint8Array(256);
+  for (let t = 0; t < 64; t++)
+    c[
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".charCodeAt(
+        t
+      )
+    ] = t;
+  const p = "function" == typeof ArrayBuffer,
+    u = (t, e) => {
+      if (p) {
         const s = ((t) => {
           let e,
             s,
@@ -81,47 +85,47 @@
             i,
             r,
             o = 0.75 * t.length,
-            h = t.length,
-            a = 0;
+            a = t.length,
+            h = 0;
           "=" === t[t.length - 1] && (o--, "=" === t[t.length - 2] && o--);
-          const c = new ArrayBuffer(o),
-            u = new Uint8Array(c);
-          for (e = 0; e < h; e += 4)
-            (s = p[t.charCodeAt(e)]),
-              (n = p[t.charCodeAt(e + 1)]),
-              (i = p[t.charCodeAt(e + 2)]),
-              (r = p[t.charCodeAt(e + 3)]),
-              (u[a++] = (s << 2) | (n >> 4)),
-              (u[a++] = ((15 & n) << 4) | (i >> 2)),
-              (u[a++] = ((3 & i) << 6) | (63 & r));
-          return c;
+          const p = new ArrayBuffer(o),
+            u = new Uint8Array(p);
+          for (e = 0; e < a; e += 4)
+            (s = c[t.charCodeAt(e)]),
+              (n = c[t.charCodeAt(e + 1)]),
+              (i = c[t.charCodeAt(e + 2)]),
+              (r = c[t.charCodeAt(e + 3)]),
+              (u[h++] = (s << 2) | (n >> 4)),
+              (u[h++] = ((15 & n) << 4) | (i >> 2)),
+              (u[h++] = ((3 & i) << 6) | (63 & r));
+          return p;
         })(t);
-        return d(s, e);
+        return l(s, e);
       }
       return { base64: !0, data: t };
     },
-    d = (t, e) =>
+    l = (t, e) =>
       "blob" === e && t instanceof ArrayBuffer ? new Blob([t]) : t,
-    f = (t, e) => {
-      if ("string" != typeof t) return { type: "message", data: d(t, e) };
+    d = (t, e) => {
+      if ("string" != typeof t) return { type: "message", data: l(t, e) };
       const s = t.charAt(0);
       return "b" === s
-        ? { type: "message", data: l(t.substring(1), e) }
+        ? { type: "message", data: u(t.substring(1), e) }
         : n[s]
         ? t.length > 1
           ? { type: n[s], data: t.substring(1) }
           : { type: n[s] }
         : i;
     },
-    y = String.fromCharCode(30);
-  function g(t) {
+    f = String.fromCharCode(30);
+  function y(t) {
     if (t)
       return (function (t) {
-        for (var e in g.prototype) t[e] = g.prototype[e];
+        for (var e in y.prototype) t[e] = y.prototype[e];
         return t;
       })(t);
   }
-  (g.prototype.on = g.prototype.addEventListener =
+  (y.prototype.on = y.prototype.addEventListener =
     function (t, e) {
       return (
         (this._callbacks = this._callbacks || {}),
@@ -129,16 +133,16 @@
         this
       );
     }),
-    (g.prototype.once = function (t, e) {
+    (y.prototype.once = function (t, e) {
       function s() {
         this.off(t, s), e.apply(this, arguments);
       }
       return (s.fn = e), this.on(t, s), this;
     }),
-    (g.prototype.off =
-      g.prototype.removeListener =
-      g.prototype.removeAllListeners =
-      g.prototype.removeEventListener =
+    (y.prototype.off =
+      y.prototype.removeListener =
+      y.prototype.removeAllListeners =
+      y.prototype.removeEventListener =
         function (t, e) {
           if (
             ((this._callbacks = this._callbacks || {}), 0 == arguments.length)
@@ -156,7 +160,7 @@
             }
           return 0 === n.length && delete this._callbacks["$" + t], this;
         }),
-    (g.prototype.emit = function (t) {
+    (y.prototype.emit = function (t) {
       this._callbacks = this._callbacks || {};
       for (
         var e = new Array(arguments.length - 1),
@@ -172,34 +176,34 @@
       }
       return this;
     }),
-    (g.prototype.emitReserved = g.prototype.emit),
-    (g.prototype.listeners = function (t) {
+    (y.prototype.emitReserved = y.prototype.emit),
+    (y.prototype.listeners = function (t) {
       return (
         (this._callbacks = this._callbacks || {}),
         this._callbacks["$" + t] || []
       );
     }),
-    (g.prototype.hasListeners = function (t) {
+    (y.prototype.hasListeners = function (t) {
       return !!this.listeners(t).length;
     });
-  const m =
+  const g =
     "undefined" != typeof self
       ? self
       : "undefined" != typeof window
       ? window
       : Function("return this")();
-  function b(t, ...e) {
+  function m(t, ...e) {
     return e.reduce((e, s) => (t.hasOwnProperty(s) && (e[s] = t[s]), e), {});
   }
-  const v = m.setTimeout,
-    k = m.clearTimeout;
-  function w(t, e) {
+  const b = g.setTimeout,
+    v = g.clearTimeout;
+  function k(t, e) {
     e.useNativeTimers
-      ? ((t.setTimeoutFn = v.bind(m)), (t.clearTimeoutFn = k.bind(m)))
-      : ((t.setTimeoutFn = m.setTimeout.bind(m)),
-        (t.clearTimeoutFn = m.clearTimeout.bind(m)));
+      ? ((t.setTimeoutFn = b.bind(g)), (t.clearTimeoutFn = v.bind(g)))
+      : ((t.setTimeoutFn = g.setTimeout.bind(g)),
+        (t.clearTimeoutFn = g.clearTimeout.bind(g)));
   }
-  class _ extends Error {
+  class w extends Error {
     constructor(t, e, s) {
       super(t),
         (this.description = e),
@@ -207,17 +211,17 @@
         (this.type = "TransportError");
     }
   }
-  class E extends g {
+  class _ extends y {
     constructor(t) {
       super(),
         (this.writable = !1),
-        w(this, t),
+        k(this, t),
         (this.opts = t),
         (this.query = t.query),
         (this.socket = t.socket);
     }
     onError(t, e, s) {
-      return super.emitReserved("error", new _(t, e, s)), this;
+      return super.emitReserved("error", new w(t, e, s)), this;
     }
     open() {
       return (this.readyState = "opening"), this.doOpen(), this;
@@ -238,7 +242,7 @@
         super.emitReserved("open");
     }
     onData(t) {
-      const e = f(t, this.socket.binaryType);
+      const e = d(t, this.socket.binaryType);
       this.onPacket(e);
     }
     onPacket(t) {
@@ -249,28 +253,28 @@
     }
     pause(t) {}
   }
-  const A =
+  const E =
       "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-_".split(
         ""
       ),
-    O = 64,
-    R = {};
-  let T,
-    C = 0,
-    B = 0;
-  function S(t) {
+    A = 64,
+    O = {};
+  let R,
+    T = 0,
+    C = 0;
+  function B(t) {
     let e = "";
     do {
-      (e = A[t % O] + e), (t = Math.floor(t / O));
+      (e = E[t % A] + e), (t = Math.floor(t / A));
     } while (t > 0);
     return e;
   }
-  function N() {
-    const t = S(+new Date());
-    return t !== T ? ((C = 0), (T = t)) : t + "." + S(C++);
+  function S() {
+    const t = B(+new Date());
+    return t !== R ? ((T = 0), (R = t)) : t + "." + B(T++);
   }
-  for (; B < O; B++) R[A[B]] = B;
-  function x(t) {
+  for (; C < A; C++) O[E[C]] = C;
+  function N(t) {
     let e = "";
     for (let s in t)
       t.hasOwnProperty(s) &&
@@ -278,32 +282,32 @@
         (e += encodeURIComponent(s) + "=" + encodeURIComponent(t[s])));
     return e;
   }
-  let L = !1;
+  let x = !1;
   try {
-    L =
+    x =
       "undefined" != typeof XMLHttpRequest &&
       "withCredentials" in new XMLHttpRequest();
   } catch (t) {}
-  const q = L;
-  function P(t) {
+  const L = x;
+  function q(t) {
     const e = t.xdomain;
     try {
-      if ("undefined" != typeof XMLHttpRequest && (!e || q))
+      if ("undefined" != typeof XMLHttpRequest && (!e || L))
         return new XMLHttpRequest();
     } catch (t) {}
     if (!e)
       try {
-        return new m[["Active"].concat("Object").join("X")](
+        return new g[["Active"].concat("Object").join("X")](
           "Microsoft.XMLHTTP"
         );
       } catch (t) {}
   }
-  function j() {}
-  const I = null != new P({ xdomain: !1 }).responseType;
-  class D extends g {
+  function P() {}
+  const j = null != new q({ xdomain: !1 }).responseType;
+  class I extends y {
     constructor(t, e) {
       super(),
-        w(this, e),
+        k(this, e),
         (this.opts = e),
         (this.method = e.method || "GET"),
         (this.uri = t),
@@ -312,7 +316,7 @@
         this.create();
     }
     create() {
-      const t = b(
+      const t = m(
         this.opts,
         "agent",
         "pfx",
@@ -325,7 +329,7 @@
         "autoUnref"
       );
       (t.xdomain = !!this.opts.xd), (t.xscheme = !!this.opts.xs);
-      const e = (this.xhr = new P(t));
+      const e = (this.xhr = new q(t));
       try {
         e.open(this.method, this.uri, this.async);
         try {
@@ -361,18 +365,18 @@
         }, 0);
       }
       "undefined" != typeof document &&
-        ((this.index = D.requestsCount++), (D.requests[this.index] = this));
+        ((this.index = I.requestsCount++), (I.requests[this.index] = this));
     }
     onError(t) {
       this.emitReserved("error", t, this.xhr), this.cleanup(!0);
     }
     cleanup(t) {
       if (void 0 !== this.xhr && null !== this.xhr) {
-        if (((this.xhr.onreadystatechange = j), t))
+        if (((this.xhr.onreadystatechange = P), t))
           try {
             this.xhr.abort();
           } catch (t) {}
-        "undefined" != typeof document && delete D.requests[this.index],
+        "undefined" != typeof document && delete I.requests[this.index],
           (this.xhr = null);
       }
     }
@@ -387,28 +391,28 @@
       this.cleanup();
     }
   }
-  function F() {
-    for (let t in D.requests)
-      D.requests.hasOwnProperty(t) && D.requests[t].abort();
+  function D() {
+    for (let t in I.requests)
+      I.requests.hasOwnProperty(t) && I.requests[t].abort();
   }
-  (D.requestsCount = 0),
-    (D.requests = {}),
+  (I.requestsCount = 0),
+    (I.requests = {}),
     "undefined" != typeof document &&
       ("function" == typeof attachEvent
-        ? attachEvent("onunload", F)
+        ? attachEvent("onunload", D)
         : "function" == typeof addEventListener &&
-          addEventListener("onpagehide" in m ? "pagehide" : "unload", F, !1));
-  const M =
+          addEventListener("onpagehide" in g ? "pagehide" : "unload", D, !1));
+  const F =
       "function" == typeof Promise && "function" == typeof Promise.resolve
         ? (t) => Promise.resolve().then(t)
         : (t, e) => e(t, 0),
-    V = m.WebSocket || m.MozWebSocket,
-    U =
+    M = g.WebSocket || g.MozWebSocket,
+    V =
       "undefined" != typeof navigator &&
       "string" == typeof navigator.product &&
       "reactnative" === navigator.product.toLowerCase(),
-    H = {
-      websocket: class extends E {
+    U = {
+      websocket: class extends _ {
         constructor(t) {
           super(t), (this.supportsBinary = !t.forceBase64);
         }
@@ -419,9 +423,9 @@
           if (!this.check()) return;
           const t = this.uri(),
             e = this.opts.protocols,
-            s = U
+            s = V
               ? {}
-              : b(
+              : m(
                   this.opts,
                   "agent",
                   "perMessageDeflate",
@@ -441,7 +445,7 @@
                 );
           this.opts.extraHeaders && (s.headers = this.opts.extraHeaders);
           try {
-            this.ws = U ? new V(t, e, s) : e ? new V(t, e) : new V(t);
+            this.ws = V ? new M(t, e, s) : e ? new M(t, e) : new M(t);
           } catch (t) {
             return this.emitReserved("error", t);
           }
@@ -465,12 +469,12 @@
           for (let e = 0; e < t.length; e++) {
             const s = t[e],
               n = e === t.length - 1;
-            a(s, this.supportsBinary, (t) => {
+            h(s, this.supportsBinary, (t) => {
               try {
                 this.ws.send(t);
               } catch (t) {}
               n &&
-                M(() => {
+                F(() => {
                   (this.writable = !0), this.emitReserved("drain");
                 }, this.setTimeoutFn);
             });
@@ -487,9 +491,9 @@
             (("wss" === e && 443 !== Number(this.opts.port)) ||
               ("ws" === e && 80 !== Number(this.opts.port))) &&
             (s = ":" + this.opts.port),
-            this.opts.timestampRequests && (t[this.opts.timestampParam] = N()),
+            this.opts.timestampRequests && (t[this.opts.timestampParam] = S()),
             this.supportsBinary || (t.b64 = 1);
-          const n = x(t);
+          const n = N(t);
           return (
             e +
             "://" +
@@ -502,10 +506,10 @@
           );
         }
         check() {
-          return !!V;
+          return !!M;
         }
       },
-      polling: class extends E {
+      polling: class extends _ {
         constructor(t) {
           if ((super(t), (this.polling = !1), "undefined" != typeof location)) {
             const e = "https:" === location.protocol;
@@ -518,7 +522,7 @@
               (this.xs = t.secure !== e);
           }
           const e = t && t.forceBase64;
-          this.supportsBinary = I && !e;
+          this.supportsBinary = j && !e;
         }
         get name() {
           return "polling";
@@ -550,10 +554,10 @@
         }
         onData(t) {
           ((t, e) => {
-            const s = t.split(y),
+            const s = t.split(f),
               n = [];
             for (let t = 0; t < s.length; t++) {
-              const i = f(s[t], e);
+              const i = d(s[t], e);
               if ((n.push(i), "error" === i.type)) break;
             }
             return n;
@@ -588,8 +592,8 @@
                 n = new Array(s);
               let i = 0;
               t.forEach((t, r) => {
-                a(t, !1, (t) => {
-                  (n[r] = t), ++i === s && e(n.join(y));
+                h(t, !1, (t) => {
+                  (n[r] = t), ++i === s && e(n.join(f));
                 });
               });
             })(t, (t) => {
@@ -603,13 +607,13 @@
           const e = this.opts.secure ? "https" : "http";
           let s = "";
           !1 !== this.opts.timestampRequests &&
-            (t[this.opts.timestampParam] = N()),
+            (t[this.opts.timestampParam] = S()),
             this.supportsBinary || t.sid || (t.b64 = 1),
             this.opts.port &&
               (("https" === e && 443 !== Number(this.opts.port)) ||
                 ("http" === e && 80 !== Number(this.opts.port))) &&
               (s = ":" + this.opts.port);
-          const n = x(t);
+          const n = N(t);
           return (
             e +
             "://" +
@@ -624,7 +628,7 @@
         request(t = {}) {
           return (
             Object.assign(t, { xd: this.xd, xs: this.xs }, this.opts),
-            new D(this.uri(), t)
+            new I(this.uri(), t)
           );
         }
         doWrite(t, e) {
@@ -644,9 +648,9 @@
         }
       },
     },
-    K =
+    H =
       /^(?:(?![^:@\/?#]+:[^:@\/]*@)(http|https|ws|wss):\/\/)?((?:(([^:@\/?#]*)(?::([^:@\/?#]*))?)?@)?((?:[a-f0-9]{0,4}:){2,7}[a-f0-9]{0,4}|[^:\/?#]*)(?::(\d*))?)(((\/(?:[^?#](?![^?#\/]*\.[^?#\/.]+(?:[?#]|$)))*\/?)?([^?#\/]*))(?:\?([^#]*))?(?:#(.*))?)/,
-    Y = [
+    K = [
       "source",
       "protocol",
       "authority",
@@ -662,7 +666,7 @@
       "query",
       "anchor",
     ];
-  function z(t) {
+  function Y(t) {
     const e = t,
       s = t.indexOf("["),
       n = t.indexOf("]");
@@ -672,10 +676,10 @@
         t.substring(0, s) +
         t.substring(s, n).replace(/:/g, ";") +
         t.substring(n, t.length));
-    let i = K.exec(t || ""),
+    let i = H.exec(t || ""),
       r = {},
       o = 14;
-    for (; o--; ) r[Y[o]] = i[o] || "";
+    for (; o--; ) r[K[o]] = i[o] || "";
     return (
       -1 != s &&
         -1 != n &&
@@ -706,19 +710,19 @@
       r
     );
   }
-  class W extends g {
+  class z extends y {
     constructor(t, e = {}) {
       super(),
         (this.writeBuffer = []),
         t && "object" == typeof t && ((e = t), (t = null)),
         t
-          ? ((t = z(t)),
+          ? ((t = Y(t)),
             (e.hostname = t.host),
             (e.secure = "https" === t.protocol || "wss" === t.protocol),
             (e.port = t.port),
             t.query && (e.query = t.query))
-          : e.host && (e.hostname = z(e.host).host),
-        w(this, e),
+          : e.host && (e.hostname = Y(e.host).host),
+        k(this, e),
         (this.secure =
           null != e.secure
             ? e.secure
@@ -801,13 +805,13 @@
         secure: this.secure,
         port: this.port,
       });
-      return new H[t](s);
+      return new U[t](s);
     }
     open() {
       let t;
       if (
         this.opts.rememberUpgrade &&
-        W.priorWebsocketSuccess &&
+        z.priorWebsocketSuccess &&
         -1 !== this.transports.indexOf("websocket")
       )
         t = "websocket";
@@ -838,7 +842,7 @@
     probe(t) {
       let e = this.createTransport(t),
         s = !1;
-      W.priorWebsocketSuccess = !1;
+      z.priorWebsocketSuccess = !1;
       const n = () => {
         s ||
           (e.send([{ type: "ping", data: "probe" }]),
@@ -849,7 +853,7 @@
                   ((this.upgrading = !0), this.emitReserved("upgrading", e), !e)
                 )
                   return;
-                (W.priorWebsocketSuccess = "websocket" === e.name),
+                (z.priorWebsocketSuccess = "websocket" === e.name),
                   this.transport.pause(() => {
                     s ||
                       ("closed" !== this.readyState &&
@@ -877,30 +881,30 @@
       function o() {
         r("transport closed");
       }
-      function h() {
+      function a() {
         r("socket closed");
       }
-      function a(t) {
+      function h(t) {
         e && t.name !== e.name && i();
       }
       const c = () => {
         e.removeListener("open", n),
           e.removeListener("error", r),
           e.removeListener("close", o),
-          this.off("close", h),
-          this.off("upgrading", a);
+          this.off("close", a),
+          this.off("upgrading", h);
       };
       e.once("open", n),
         e.once("error", r),
         e.once("close", o),
-        this.once("close", h),
-        this.once("upgrading", a),
+        this.once("close", a),
+        this.once("upgrading", h),
         e.open();
     }
     onOpen() {
       if (
         ((this.readyState = "open"),
-        (W.priorWebsocketSuccess = "websocket" === this.transport.name),
+        (z.priorWebsocketSuccess = "websocket" === this.transport.name),
         this.emitReserved("open"),
         this.flush(),
         "open" === this.readyState && this.opts.upgrade)
@@ -1060,7 +1064,7 @@
       );
     }
     onError(t) {
-      (W.priorWebsocketSuccess = !1),
+      (z.priorWebsocketSuccess = !1),
         this.emitReserved("error", t),
         this.onClose("transport error", t);
     }
@@ -1093,86 +1097,86 @@
       return e;
     }
   }
-  (W.protocol = 4), W.protocol;
-  const J = "function" == typeof ArrayBuffer,
-    $ = (t) =>
+  (z.protocol = 4), z.protocol;
+  const W = "function" == typeof ArrayBuffer,
+    J = (t) =>
       "function" == typeof ArrayBuffer.isView
         ? ArrayBuffer.isView(t)
         : t.buffer instanceof ArrayBuffer,
-    Q = Object.prototype.toString,
-    X =
+    $ = Object.prototype.toString,
+    Q =
       "function" == typeof Blob ||
       ("undefined" != typeof Blob &&
-        "[object BlobConstructor]" === Q.call(Blob)),
-    G =
+        "[object BlobConstructor]" === $.call(Blob)),
+    X =
       "function" == typeof File ||
       ("undefined" != typeof File &&
-        "[object FileConstructor]" === Q.call(File));
-  function Z(t) {
+        "[object FileConstructor]" === $.call(File));
+  function G(t) {
     return (
-      (J && (t instanceof ArrayBuffer || $(t))) ||
-      (X && t instanceof Blob) ||
-      (G && t instanceof File)
+      (W && (t instanceof ArrayBuffer || J(t))) ||
+      (Q && t instanceof Blob) ||
+      (X && t instanceof File)
     );
   }
-  function tt(t, e) {
+  function Z(t, e) {
     if (!t || "object" != typeof t) return !1;
     if (Array.isArray(t)) {
-      for (let e = 0, s = t.length; e < s; e++) if (tt(t[e])) return !0;
+      for (let e = 0, s = t.length; e < s; e++) if (Z(t[e])) return !0;
       return !1;
     }
-    if (Z(t)) return !0;
+    if (G(t)) return !0;
     if (t.toJSON && "function" == typeof t.toJSON && 1 === arguments.length)
-      return tt(t.toJSON(), !0);
+      return Z(t.toJSON(), !0);
     for (const e in t)
-      if (Object.prototype.hasOwnProperty.call(t, e) && tt(t[e])) return !0;
+      if (Object.prototype.hasOwnProperty.call(t, e) && Z(t[e])) return !0;
     return !1;
   }
-  function et(t) {
+  function tt(t) {
     const e = [],
       s = t.data,
       n = t;
     return (
-      (n.data = st(s, e)), (n.attachments = e.length), { packet: n, buffers: e }
+      (n.data = et(s, e)), (n.attachments = e.length), { packet: n, buffers: e }
     );
   }
-  function st(t, e) {
+  function et(t, e) {
     if (!t) return t;
-    if (Z(t)) {
+    if (G(t)) {
       const s = { _placeholder: !0, num: e.length };
       return e.push(t), s;
     }
     if (Array.isArray(t)) {
       const s = new Array(t.length);
-      for (let n = 0; n < t.length; n++) s[n] = st(t[n], e);
+      for (let n = 0; n < t.length; n++) s[n] = et(t[n], e);
       return s;
     }
     if ("object" == typeof t && !(t instanceof Date)) {
       const s = {};
       for (const n in t)
-        Object.prototype.hasOwnProperty.call(t, n) && (s[n] = st(t[n], e));
+        Object.prototype.hasOwnProperty.call(t, n) && (s[n] = et(t[n], e));
       return s;
     }
     return t;
   }
-  function nt(t, e) {
-    return (t.data = it(t.data, e)), delete t.attachments, t;
+  function st(t, e) {
+    return (t.data = nt(t.data, e)), delete t.attachments, t;
   }
-  function it(t, e) {
+  function nt(t, e) {
     if (!t) return t;
     if (t && !0 === t._placeholder) {
       if ("number" == typeof t.num && t.num >= 0 && t.num < e.length)
         return e[t.num];
       throw new Error("illegal attachments");
     }
-    if (Array.isArray(t)) for (let s = 0; s < t.length; s++) t[s] = it(t[s], e);
+    if (Array.isArray(t)) for (let s = 0; s < t.length; s++) t[s] = nt(t[s], e);
     else if ("object" == typeof t)
       for (const s in t)
-        Object.prototype.hasOwnProperty.call(t, s) && (t[s] = it(t[s], e));
+        Object.prototype.hasOwnProperty.call(t, s) && (t[s] = nt(t[s], e));
     return t;
   }
-  const rt = 5;
-  var ot;
+  const it = 5;
+  var rt;
   !(function (t) {
     (t[(t.CONNECT = 0)] = "CONNECT"),
       (t[(t.DISCONNECT = 1)] = "DISCONNECT"),
@@ -1181,16 +1185,16 @@
       (t[(t.CONNECT_ERROR = 4)] = "CONNECT_ERROR"),
       (t[(t.BINARY_EVENT = 5)] = "BINARY_EVENT"),
       (t[(t.BINARY_ACK = 6)] = "BINARY_ACK");
-  })(ot || (ot = {}));
-  class ht {
+  })(rt || (rt = {}));
+  class ot {
     constructor(t) {
       this.replacer = t;
     }
     encode(t) {
-      return (t.type !== ot.EVENT && t.type !== ot.ACK) || !tt(t)
+      return (t.type !== rt.EVENT && t.type !== rt.ACK) || !Z(t)
         ? [this.encodeAsString(t)]
         : this.encodeAsBinary({
-            type: t.type === ot.EVENT ? ot.BINARY_EVENT : ot.BINARY_ACK,
+            type: t.type === rt.EVENT ? rt.BINARY_EVENT : rt.BINARY_ACK,
             nsp: t.nsp,
             data: t.data,
             id: t.id,
@@ -1199,7 +1203,7 @@
     encodeAsString(t) {
       let e = "" + t.type;
       return (
-        (t.type !== ot.BINARY_EVENT && t.type !== ot.BINARY_ACK) ||
+        (t.type !== rt.BINARY_EVENT && t.type !== rt.BINARY_ACK) ||
           (e += t.attachments + "-"),
         t.nsp && "/" !== t.nsp && (e += t.nsp + ","),
         null != t.id && (e += t.id),
@@ -1208,13 +1212,13 @@
       );
     }
     encodeAsBinary(t) {
-      const e = et(t),
+      const e = tt(t),
         s = this.encodeAsString(e.packet),
         n = e.buffers;
       return n.unshift(s), n;
     }
   }
-  class at extends g {
+  class at extends y {
     constructor(t) {
       super(), (this.reviver = t);
     }
@@ -1224,14 +1228,14 @@
         if (this.reconstructor)
           throw new Error("got plaintext data when reconstructing a packet");
         e = this.decodeString(t);
-        const s = e.type === ot.BINARY_EVENT;
-        s || e.type === ot.BINARY_ACK
-          ? ((e.type = s ? ot.EVENT : ot.ACK),
-            (this.reconstructor = new ct(e)),
+        const s = e.type === rt.BINARY_EVENT;
+        s || e.type === rt.BINARY_ACK
+          ? ((e.type = s ? rt.EVENT : rt.ACK),
+            (this.reconstructor = new ht(e)),
             0 === e.attachments && super.emitReserved("decoded", e))
           : super.emitReserved("decoded", e);
       } else {
-        if (!Z(t) && !t.base64) throw new Error("Unknown type: " + t);
+        if (!G(t) && !t.base64) throw new Error("Unknown type: " + t);
         if (!this.reconstructor)
           throw new Error("got binary data when not reconstructing a packet");
         (e = this.reconstructor.takeBinaryData(t)),
@@ -1241,9 +1245,9 @@
     decodeString(t) {
       let e = 0;
       const s = { type: Number(t.charAt(0)) };
-      if (void 0 === ot[s.type])
+      if (void 0 === rt[s.type])
         throw new Error("unknown packet type " + s.type);
-      if (s.type === ot.BINARY_EVENT || s.type === ot.BINARY_ACK) {
+      if (s.type === rt.BINARY_EVENT || s.type === rt.BINARY_ACK) {
         const n = e + 1;
         for (; "-" !== t.charAt(++e) && e != t.length; );
         const i = t.substring(n, e);
@@ -1285,17 +1289,17 @@
     }
     static isPayloadValid(t, e) {
       switch (t) {
-        case ot.CONNECT:
+        case rt.CONNECT:
           return "object" == typeof e;
-        case ot.DISCONNECT:
+        case rt.DISCONNECT:
           return void 0 === e;
-        case ot.CONNECT_ERROR:
+        case rt.CONNECT_ERROR:
           return "string" == typeof e || "object" == typeof e;
-        case ot.EVENT:
-        case ot.BINARY_EVENT:
+        case rt.EVENT:
+        case rt.BINARY_EVENT:
           return Array.isArray(e) && e.length > 0;
-        case ot.ACK:
-        case ot.BINARY_ACK:
+        case rt.ACK:
+        case rt.BINARY_ACK:
           return Array.isArray(e);
       }
     }
@@ -1305,7 +1309,7 @@
         (this.reconstructor = null));
     }
   }
-  class ct {
+  class ht {
     constructor(t) {
       (this.packet = t), (this.buffers = []), (this.reconPack = t);
     }
@@ -1314,7 +1318,7 @@
         (this.buffers.push(t),
         this.buffers.length === this.reconPack.attachments)
       ) {
-        const t = nt(this.reconPack, this.buffers);
+        const t = st(this.reconPack, this.buffers);
         return this.finishedReconstruction(), t;
       }
       return null;
@@ -1323,7 +1327,7 @@
       (this.reconPack = null), (this.buffers = []);
     }
   }
-  function pt(t, e, s) {
+  function ct(t, e, s) {
     return (
       t.on(e, s),
       function () {
@@ -1331,7 +1335,7 @@
       }
     );
   }
-  const ut = Object.freeze({
+  const pt = Object.freeze({
     connect: 1,
     connect_error: 1,
     disconnect: 1,
@@ -1339,7 +1343,7 @@
     newListener: 1,
     removeListener: 1,
   });
-  class lt extends g {
+  class ut extends y {
     constructor(t, e, s) {
       super(),
         (this.connected = !1),
@@ -1364,10 +1368,10 @@
       if (this.subs) return;
       const t = this.io;
       this.subs = [
-        pt(t, "open", this.onopen.bind(this)),
-        pt(t, "packet", this.onpacket.bind(this)),
-        pt(t, "error", this.onerror.bind(this)),
-        pt(t, "close", this.onclose.bind(this)),
+        ct(t, "open", this.onopen.bind(this)),
+        ct(t, "packet", this.onpacket.bind(this)),
+        ct(t, "error", this.onerror.bind(this)),
+        ct(t, "close", this.onclose.bind(this)),
       ];
     }
     get active() {
@@ -1389,14 +1393,14 @@
       return t.unshift("message"), this.emit.apply(this, t), this;
     }
     emit(t, ...e) {
-      if (ut.hasOwnProperty(t))
+      if (pt.hasOwnProperty(t))
         throw new Error('"' + t.toString() + '" is a reserved event name');
       if (
         (e.unshift(t),
         this._opts.retries && !this.flags.fromQueue && !this.flags.volatile)
       )
         return this._addToQueue(e), this;
-      const s = { type: ot.EVENT, data: e, options: {} };
+      const s = { type: rt.EVENT, data: e, options: {} };
       if (
         ((s.options.compress = !1 !== this.flags.compress),
         "function" == typeof e[e.length - 1])
@@ -1487,7 +1491,7 @@
     }
     _sendConnectPacket(t) {
       this.packet({
-        type: ot.CONNECT,
+        type: rt.CONNECT,
         data: this._pid
           ? Object.assign({ pid: this._pid, offset: this._lastOffset }, t)
           : t,
@@ -1504,7 +1508,7 @@
     onpacket(t) {
       if (t.nsp === this.nsp)
         switch (t.type) {
-          case ot.CONNECT:
+          case rt.CONNECT:
             t.data && t.data.sid
               ? this.onconnect(t.data.sid, t.data.pid)
               : this.emitReserved(
@@ -1514,18 +1518,18 @@
                   )
                 );
             break;
-          case ot.EVENT:
-          case ot.BINARY_EVENT:
+          case rt.EVENT:
+          case rt.BINARY_EVENT:
             this.onevent(t);
             break;
-          case ot.ACK:
-          case ot.BINARY_ACK:
+          case rt.ACK:
+          case rt.BINARY_ACK:
             this.onack(t);
             break;
-          case ot.DISCONNECT:
+          case rt.DISCONNECT:
             this.ondisconnect();
             break;
-          case ot.CONNECT_ERROR:
+          case rt.CONNECT_ERROR:
             this.destroy();
             const e = new Error(t.data.message);
             (e.data = t.data.data), this.emitReserved("connect_error", e);
@@ -1553,7 +1557,7 @@
       const e = this;
       let s = !1;
       return function (...n) {
-        s || ((s = !0), e.packet({ type: ot.ACK, id: t, data: n }));
+        s || ((s = !0), e.packet({ type: rt.ACK, id: t, data: n }));
       };
     }
     onack(t) {
@@ -1586,7 +1590,7 @@
     }
     disconnect() {
       return (
-        this.connected && this.packet({ type: ot.DISCONNECT }),
+        this.connected && this.packet({ type: rt.DISCONNECT }),
         this.destroy(),
         this.connected && this.onclose("io client disconnect"),
         this
@@ -1663,7 +1667,7 @@
       }
     }
   }
-  function dt(t) {
+  function lt(t) {
     (t = t || {}),
       (this.ms = t.min || 100),
       (this.max = t.max || 1e4),
@@ -1671,7 +1675,7 @@
       (this.jitter = t.jitter > 0 && t.jitter <= 1 ? t.jitter : 0),
       (this.attempts = 0);
   }
-  (dt.prototype.duration = function () {
+  (lt.prototype.duration = function () {
     var t = this.ms * Math.pow(this.factor, this.attempts++);
     if (this.jitter) {
       var e = Math.random(),
@@ -1680,19 +1684,19 @@
     }
     return 0 | Math.min(t, this.max);
   }),
-    (dt.prototype.reset = function () {
+    (lt.prototype.reset = function () {
       this.attempts = 0;
     }),
-    (dt.prototype.setMin = function (t) {
+    (lt.prototype.setMin = function (t) {
       this.ms = t;
     }),
-    (dt.prototype.setMax = function (t) {
+    (lt.prototype.setMax = function (t) {
       this.max = t;
     }),
-    (dt.prototype.setJitter = function (t) {
+    (lt.prototype.setJitter = function (t) {
       this.jitter = t;
     });
-  class ft extends g {
+  class dt extends y {
     constructor(t, s) {
       var n;
       super(),
@@ -1701,7 +1705,7 @@
         t && "object" == typeof t && ((s = t), (t = void 0)),
         ((s = s || {}).path = s.path || "/socket.io"),
         (this.opts = s),
-        w(this, s),
+        k(this, s),
         this.reconnection(!1 !== s.reconnection),
         this.reconnectionAttempts(s.reconnectionAttempts || 1 / 0),
         this.reconnectionDelay(s.reconnectionDelay || 1e3),
@@ -1709,7 +1713,7 @@
         this.randomizationFactor(
           null !== (n = s.randomizationFactor) && void 0 !== n ? n : 0.5
         ),
-        (this.backoff = new dt({
+        (this.backoff = new lt({
           min: this.reconnectionDelay(),
           max: this.reconnectionDelayMax(),
           jitter: this.randomizationFactor(),
@@ -1768,14 +1772,14 @@
     }
     open(t) {
       if (~this._readyState.indexOf("open")) return this;
-      this.engine = new W(this.uri, this.opts);
+      this.engine = new z(this.uri, this.opts);
       const e = this.engine,
         s = this;
       (this._readyState = "opening"), (this.skipReconnect = !1);
-      const n = pt(e, "open", function () {
+      const n = ct(e, "open", function () {
           s.onopen(), t && t();
         }),
-        i = pt(e, "error", (e) => {
+        i = ct(e, "error", (e) => {
           s.cleanup(),
             (s._readyState = "closed"),
             this.emitReserved("error", e),
@@ -1801,11 +1805,11 @@
       this.cleanup(), (this._readyState = "open"), this.emitReserved("open");
       const t = this.engine;
       this.subs.push(
-        pt(t, "ping", this.onping.bind(this)),
-        pt(t, "data", this.ondata.bind(this)),
-        pt(t, "error", this.onerror.bind(this)),
-        pt(t, "close", this.onclose.bind(this)),
-        pt(this.decoder, "decoded", this.ondecoded.bind(this))
+        ct(t, "ping", this.onping.bind(this)),
+        ct(t, "data", this.ondata.bind(this)),
+        ct(t, "error", this.onerror.bind(this)),
+        ct(t, "close", this.onclose.bind(this)),
+        ct(this.decoder, "decoded", this.ondecoded.bind(this))
       );
     }
     onping() {
@@ -1819,7 +1823,7 @@
       }
     }
     ondecoded(t) {
-      M(() => {
+      F(() => {
         this.emitReserved("packet", t);
       }, this.setTimeoutFn);
     }
@@ -1831,7 +1835,7 @@
       return (
         s
           ? this._autoConnect && !s.active && s.connect()
-          : ((s = new lt(this, t, e)), (this.nsps[t] = s)),
+          : ((s = new ut(this, t, e)), (this.nsps[t] = s)),
         s
       );
     }
@@ -1900,8 +1904,8 @@
         this.emitReserved("reconnect", t);
     }
   }
-  const yt = {};
-  function gt(t, e) {
+  const ft = {};
+  function yt(t, e) {
     "object" == typeof t && ((e = t), (t = void 0));
     const s = (function (t, e = "", s) {
         let n = t;
@@ -1912,7 +1916,7 @@
               (t = "/" === t.charAt(1) ? s.protocol + t : s.host + t),
             /^(https?|wss?):\/\//.test(t) ||
               (t = void 0 !== s ? s.protocol + "//" + t : "https://" + t),
-            (n = z(t))),
+            (n = Y(t))),
           n.port ||
             (/^(http|ws)$/.test(n.protocol)
               ? (n.port = "80")
@@ -1932,20 +1936,20 @@
       n = s.source,
       i = s.id,
       r = s.path,
-      o = yt[i] && r in yt[i].nsps;
-    let h;
+      o = ft[i] && r in ft[i].nsps;
+    let a;
     return (
       e.forceNew || e["force new connection"] || !1 === e.multiplex || o
-        ? (h = new ft(n, e))
-        : (yt[i] || (yt[i] = new ft(n, e)), (h = yt[i])),
+        ? (a = new dt(n, e))
+        : (ft[i] || (ft[i] = new dt(n, e)), (a = ft[i])),
       s.query && !e.query && (e.query = s.queryKey),
-      h.socket(s.path, e)
+      a.socket(s.path, e)
     );
   }
-  Object.assign(gt, { Manager: ft, Socket: lt, io: gt, connect: gt });
-  var mt = gt(),
-    bt = document.querySelector("#messages");
-  mt.on("chat-message", function (t) {
+  Object.assign(yt, { Manager: dt, Socket: ut, io: yt, connect: yt });
+  var gt = yt(),
+    mt = document.querySelector("#messages");
+  gt.on("chat-message", function (t) {
     var e = t.message,
       s = t.sender;
     console.log({ message: e, sender: s });
@@ -1953,7 +1957,7 @@
       i = document.createElement("span");
     i.innerText = s;
     var r = document.createElement("div");
-    (r.innerText = e), n.appendChild(i), n.appendChild(r), bt.append(n);
+    (r.innerText = e), n.appendChild(i), n.appendChild(r), mt.append(n);
   }),
     document
       .querySelector("input#chatMessage")
