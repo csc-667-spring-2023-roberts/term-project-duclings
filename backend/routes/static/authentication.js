@@ -67,6 +67,7 @@ router.post("/login", async (request, response) => {
         email,
       };
 
+      console.log(request.session);
       response.redirect("/lobby");
     } else {
       throw "User did not provide valid credentials";

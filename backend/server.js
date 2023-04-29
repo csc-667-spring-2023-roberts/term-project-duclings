@@ -10,8 +10,8 @@ const cookieParser = require("cookie-parser");
 const pgSession = require("connect-pg-simple")(session);
 const db = require("./db/connection.js");
 
-//const addSessionLocals = require("./middleware/add-session-locals.js");
-//const isAuthenticated = require("./middleware/is-authenticated.js");
+const addSessionLocals = require("./middleware/add-session-locals.js");
+const isAuthenticated = require("./middleware/is-authenticated.js");
 const initSockets = require("./sockets/init.js");
 
 require("dotenv").config();
@@ -42,7 +42,7 @@ if (process.env.NODE_ENV === "development") {
 }
 
 /* After app creation and standard setup */
-// Creating a table to store session information to database
+// Stores session information to database
 app.use(cookieParser());
 
 const sessionMiddleware = session({
@@ -56,6 +56,14 @@ const sessionMiddleware = session({
 app.use(sessionMiddleware);
 const server = initSockets(app, sessionMiddleware);
 
+// Test middleware to print session info on every request
+/*
+app.use((req, res, next) => {
+  console.log("Session object: ", req.session);
+  next();
+});
+*/
+
 // App setup (?)
 const port = process.env.PORT || 3000;
 
@@ -63,10 +71,11 @@ app.set("views", path.join(".", "backend", "views"));
 app.set("view engine", "ejs");
 
 app.use(express.static(path.join(".", "backend", "static")));
+app.use(addSessionLocals);
 
 app.use("/", homeRoutes);
-app.use("/games", gamesRoutes);
-app.use("/lobby", lobbyRoutes);
+app.use("/games", isAuthenticated, gamesRoutes);
+app.use("/lobby", isAuthenticated, lobbyRoutes);
 app.use("/authentication", authenticationRoutes);
 
 app.use("/test", testRoutes);
