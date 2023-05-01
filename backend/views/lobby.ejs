@@ -1,7 +1,7 @@
 <html>
     <head>
         <title><%= title %></title>
-        <script scr="/scripts/bundle.js"></script>
+        <script scr="/scripts/bundle.js" defer></script>
         <link rel="stylesheet" href="/stylesheets/home.css" />
     </head>
     <body>
@@ -17,10 +17,10 @@
         </ul>
 
         <div id="chat-container">
-        <div id="messages"></div>
-        <label>
-            <input id="chatMessage" name="chat-message" placeholder="Message..." />
-        </label>
+            <div id="messages"></div>
+            <label>
+                <input id="chatMessage" name="chat-message" placeholder="Message..." />
+            </label>
         </div>
     </body>
 </html>

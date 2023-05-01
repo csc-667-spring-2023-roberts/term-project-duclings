@@ -76,7 +76,6 @@ app.use("/", homeRoutes);
 app.use("/games", isAuthenticated, gamesRoutes);
 app.use("/lobby", isAuthenticated, lobbyRoutes);
 app.use("/authentication", authenticationRoutes);
-
 app.use("/test", testRoutes);
 app.use("/chat", chatRoutes);
 

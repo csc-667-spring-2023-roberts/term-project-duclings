@@ -1,16 +1,25 @@
 // File to handle POST requests to /chat/:id and broadcast the message to all clients
 
 const express = require("express");
-
 const router = express.Router();
+const events = require("../../sockets/constants.js");
+const Chat = require("../../db/chat.js");
 
-router.post("/:id", (request, response) => {
+router.post("/:id", async (request, response) => {
   const io = request.app.get("io");
 
   const { message } = request.body;
-  const sender = request.session.user.username;
+  const { username, id } = request.session.user;
 
-  io.emit("chat-message", { message, sender });
+  const { created_at: timestamp } = await Chat.create(message, id);
+
+  io.emit(events.CHAT_MESSAGE_RECEIVED, {
+    message,
+    username,
+    timestamp,
+  });
+
+  response.status(200);
 });
 
 module.exports = router;
