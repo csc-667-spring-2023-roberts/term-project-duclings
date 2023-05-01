@@ -8,7 +8,7 @@ const router = express.Router();
 const SALT_ROUNDS = 10;
 
 // Sign up route
-router.get("/sign-up", (req, res) => {
+router.get("/sign-up", (_req, res) => {
   res.render("sign-up", { title: "Steven's term project" });
 });
 
@@ -20,7 +20,7 @@ router.post("/sign-up", async (request, response) => {
   const hash = await bcrypt.hash(password, salt);
 
   try {
-    const { id } = Users.create(username, email, hash);
+    const { id } = await Users.create(username, email, hash);
     request.session.user = {
       id,
       username,
@@ -35,13 +35,12 @@ router.post("/sign-up", async (request, response) => {
       title: "Steven's term project",
       username,
       email,
-      message: "Error!",
     });
   }
 });
 
 // Login route
-router.get("/login", (req, res) => {
+router.get("/login", (_req, res) => {
   res.render("login", { title: "Steven's term project" });
 });
 
@@ -53,14 +52,15 @@ router.post("/login", async (request, response) => {
     const { id, username, password: hash } = await Users.findByEmail(email);
     const isValidUser = await bcrypt.compare(password, hash.trim());
 
-    console.log("password is ()" + password + "()");
-    console.log("hash is ()" + hash + "()");
-    console.log("isValidUser is " + isValidUser);
+    // console.log("password is ()" + password + "()");
+    // console.log("hash is ()" + hash + "()");
+    // console.log("isValidUser is " + isValidUser);
 
-    console.log("id is " + id);
-    console.log("username is " + username);
+    // console.log("id is " + id);
+    // console.log("username is " + username);
 
     if (isValidUser) {
+      console.log("User is valid");
       request.session.user = {
         id,
         username,

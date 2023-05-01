@@ -50,8 +50,6 @@
     "socket.io-client": "^4.6.1"
   },
   "devDependencies": {
-    "webpack": "^5.76.2",
-    "webpack-cli": "^5.0.2",
     "@babel/core": "^7.21.5",
     "@babel/preset-env": "^7.21.4",
     "babel-loader": "^9.1.2",
@@ -60,6 +58,8 @@
     "husky": "^8.0.3",
     "lint-staged": "^13.2.0",
     "livereload": "^0.9.3",
-    "nodemon": "^2.0.21"
+    "nodemon": "^2.0.21",
+    "webpack": "^5.76.2",
+    "webpack-cli": "^5.0.2"
   }
 }

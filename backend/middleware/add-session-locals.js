@@ -3,6 +3,7 @@ const addSessionLocals = (request, _response, next) => {
     request.app.locals.user = {
       ...request.session.user,
     };
+    console.log(request.app.locals.user);
   }
 
   next();

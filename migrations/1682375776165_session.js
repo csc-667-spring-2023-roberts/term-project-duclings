@@ -6,15 +6,17 @@
 exports.up = (pgm) => {
   pgm.createTable("session", {
     sid: {
-      type: "VARCHAR(255)",
+      type: "varchar(255)",
       notNull: true,
+      primaryKey: true,
     },
     sess: {
-      type: "string",
+      type: "json",
+      notNull: true,
     },
     expire: {
-      type: "TIMESTAMP",
-      default: pgm.func("CURRENT_TIMESTAMP"),
+      type: "timestamp",
+      notNull: true,
     },
   });
 };
