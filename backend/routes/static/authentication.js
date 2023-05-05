@@ -9,7 +9,7 @@ const SALT_ROUNDS = 10;
 
 // Sign up route
 router.get("/sign-up", (_req, res) => {
-  res.render("sign-up", { title: "Steven's term project" });
+  res.render("sign-up", { title: "Team Ducling's term project" });
 });
 
 // Creating a new user and encrypting their password
@@ -32,7 +32,7 @@ router.post("/sign-up", async (request, response) => {
     console.log({ error });
 
     response.render("sign-up", {
-      title: "Steven's term project",
+      title: "Team Ducling's term project",
       username,
       email,
     });
@@ -41,7 +41,7 @@ router.post("/sign-up", async (request, response) => {
 
 // Login route
 router.get("/login", (_req, res) => {
-  res.render("login", { title: "Steven's term project" });
+  res.render("login", { title: "Team Ducling's term project" });
 });
 
 // Checking to see if provided username and password are valid
@@ -76,7 +76,7 @@ router.post("/login", async (request, response) => {
     console.log({ error });
 
     response.render("login", {
-      title: "Steven's term project",
+      title: "Team Ducling's term project",
       email,
       message: "Error!",
     });

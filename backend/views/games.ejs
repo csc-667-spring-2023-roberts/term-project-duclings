@@ -1,18 +1,7 @@
 <html>
-    <head>
-        <title><%= title %></title>
-        <script scr="/scripts/bundle.js"></script>
-        <link rel="stylesheet" href="/stylesheets/home.css" />
-    </head>
+<%- include('partials/head.ejs') %>
     <body>
         <h1>Game <%= id %> Page (Unauthenticated)</h1>
-
-        <ul>
-            <li><a href="/">Home</a></li>
-            <li><a href="/authentication/login">Login</a></li>
-            <li><a href="/authentication/sign-up">Sign Up</a></li>
-            <li><a href="/lobby">Lobby</a></li>
-            <li><a href="/games/42">Game (42)</a></li>
-        </ul>
+        <%- include('partials/unauthenticated_nav.ejs') %>
     </body>
 </html>

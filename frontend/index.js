@@ -1,14 +1,20 @@
 import io from "socket.io-client";
 import events from "../backend/sockets/constants";
+import { gameCreatedHandler } from "./games/created";
+import { gameUpdatedHandler } from "./games/updated";
+import { getGameId } from "./games/get-game-id";
 
 const socket = io();
+const game_id = getGameId(document.location.pathname);
+gameCreatedHandler(socket);
+gameUpdatedHandler(socket, game_id);
 
 const messageContainer = document.querySelector("#messages");
 
 socket.on(events.CHAT_MESSAGE_RECEIVED, ({ username, message, timestamp }) => {
   const entry = document.createElement("div");
 
-  const displayName = document.createElement("spam");
+  const displayName = document.createElement("span");
   displayName.innerText = username;
   const displayMessage = document.createElement("span");
   displayMessage.innerText = message;
