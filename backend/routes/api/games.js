@@ -21,7 +21,7 @@ router.get("/", async (request, response) => {
 
 // Create new game
 router.get("/create", async (request, response) => {
-  // Who created the game
+  // Saves the user_id of whoever created the game
   const { id: user_id } = request.session.user;
   const io = request.app.get("io");
 

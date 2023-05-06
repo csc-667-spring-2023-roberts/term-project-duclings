@@ -6,12 +6,14 @@ const INSERT_FIRST_USER_SQL =
   "INSERT INTO game_users (user_id, game_id, current_player) VALUES ($1, $2, true)";
 
 const create = async (creator_id) => {
-  // Create game instance
+  // Creates game instance for this game (in the database in the games table)
   const { id } = await db.one(CREATE_GAME_SQL);
 
-  // Insert user into game
+  // Insert creator of the game into the game (into the games_users column of the game row)
   await db.none(INSERT_FIRST_USER_SQL, [creator_id, id]);
 
+  // Game board gets set up here:
+  // In his tic-tac-toe example, he used a for loop to iterate through the board and insert each cell as an empty move (set to zero, aka not a user) into the database
   const board = [];
   for (let row = 0; row < 3; row++) {
     for (let column = 0; column < 3; column++) {
@@ -21,8 +23,10 @@ const create = async (creator_id) => {
     }
   }
 
+  // Inserts the board into the database after filling it with empty moves
   await Promise.all(board.map((query) => db.none(query, [id])));
 
+  // Returns the game id
   return { id };
 };
 
