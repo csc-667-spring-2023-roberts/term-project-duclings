@@ -1,0 +1,47 @@
+<style>
+  .debugnav {
+    position: absolute;
+    height: 5px;
+    background-color: transparent;
+    left: 0;
+    top: 0;
+    width: 100%;
+    overflow: hidden;
+    transition: height 0.5s, background-color 0.25s, opacity 0.25s;
+    display: flex;
+    align-items: center;
+    opacity: 0;
+    color: white;
+  }
+  .debugnav:hover {
+    background-color: rgba(0,0,0,0.6);
+    opacity: 1;
+    height: 64px;
+  }
+  .debugnav ul{
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
+    padding: 16px;
+    align-items: center;
+    margin: 0;
+  }
+  .debugnav ul li {
+    display: block;
+  }
+  .debugnav ul li a{
+    color: white;
+  }
+</style>
+
+<div class="debugnav">
+  <h2>DEBUG MENU</h2>
+  <ul>
+    <li><a href="/">Home</a></li>
+    <li><a href="/authentication/login">Login</a></li>
+    <li><a href="/authentication/sign-up">Sign Up</a></li>
+    <li><a href="/lobby">Lobby</a></li>
+    <li><a href="/games/42">Game (42)</a></li>
+    <li><a href="/gamesession">Board</a></li>
+  </ul>
+</div>

@@ -1,22 +1,46 @@
 <html>
-<%- include('partials/head.ejs') %>
-	<body>
-		<h1>Sign Up page (unauthenticated)</h1>
-		<%- include('partials/unauthenticated_nav.ejs') %>
-			<form method="post" action="/authentication/sign-up">
-				<label>
-					<em>Username</em>
-					<input name="username" autocomplete="username" placeholder="Username" />
-				</label>
-				<label>
-					<em>Email</em>
-					<input name="email" autocomplete="email" placeholder="Email address" />
-				</label>
-				<label>
-					<em>Password</em>
-					<input name="password" type="password" autocomplete="new-password" />
-				</label>
-				<input type="submit" value="Register" />
-			</form>
-	</body>
+  <head>
+    <%- include('./partials/head'); %>
+    <style>
+      #signup-container {
+        width: 360px;
+        height: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <%- include('./partials/navbar'); %>
+    <div class="center-container">
+      <%- include('./partials/logo'); %>
+
+      <div id="signup-container">
+        <div id="signup-head" class="content-head">
+          <h1>Sign Up</h1>
+          <a id="login-link" class="head-link" href="/authentication/login">Log In</a>
+        </div>
+        <form id="signup-form" class="vertical-form" method="post" action="/authentication/sign-up">
+          <label class="input-textfield">
+            <span>Username</span>
+            <input name="username" autocomplete="username" placeholder="Username" />
+          </label>
+          <label class="input-textfield">
+            <span>Email</span>
+            <input name="email" autocomplete="email" placeholder="Email Address" />
+          </label>
+          <label class="input-textfield">
+            <span>Password</span>
+            <input name="password" type="password" autocomplete="new-password" placeholder="Password" />
+          </label>
+          <label class="input-textfield">
+            <span>Confirm Password</span>
+            <input name="password" type="password" autocomplete="new-password" placeholder="Password" />
+          </label>
+
+          <div class="button-align-right">
+            <input class="primary-button" type="submit" value="Sign Up" />
+          </div>
+        </form>
+      </div>
+    </div>
+  </body>
 </html>
