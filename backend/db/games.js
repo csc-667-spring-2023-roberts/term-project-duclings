@@ -30,10 +30,14 @@ const create = async (creator_id) => {
   return { id };
 };
 
+// const GAMES_LIST_SQL = `
+//   SELECT g.id, g.created_at FROM games g, game_users gu
+//   WHERE g.id=gu.game_id AND gu.user_id != $1 AND
+//   (SELECT COUNT(*) FROM game_users WHERE game_users.game_id=g.id) = 1
+// `;
+
 const GAMES_LIST_SQL = `
-  SELECT g.id, g.created_at FROM games g, game_users gu 
-  WHERE g.id=gu.game_id AND gu.user_id != $1 AND 
-  (SELECT COUNT(*) FROM game_users WHERE game_users.game_id=g.id) = 1
+  SELECT * FROM games;
 `;
 
 const list = async (user_id) => db.any(GAMES_LIST_SQL, [user_id]);
