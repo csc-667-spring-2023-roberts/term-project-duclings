@@ -1,19 +1,48 @@
 <html>
-<%- include('partials/head.ejs') %>
+  <head>
+    <%- include('partials/head.ejs'); %>
+    <style>
+      #login-container {
+        width: 360px;
+        height: auto;
+      }
+      #login-container form {
+        margin: 0;
+      }
+    </style>
+  </head>
   <body>
-    <h1>Login page (unauthenticated)</h1>
-    <%- include('partials/unauthenticated_nav.ejs') %>
-      <form method="post" action="/authentication/login">
-        <label>
-          <em>Email</em>
-          <input name="email" autocomplete="email" placeholder="Email" />
-        </label>
-        <label>
-          <em>Password</em>
-          <input name="password" type="password" autocomplete="current-password" placeholder="Password" />
-        </label>
-        <input type="submit" value="Login" />
-      </form>
+    <%- include('./partials/navbar'); %>
+    <div class="center-container">
+      <%- include('./partials/logo'); %>
+
+      <div id="login-container">
+        <div id="login-head" class="content-head">
+          <h1>Log In</h1>
+          <a id="sign-up-link" class="head-link" href="/authentication/sign-up">Create an Account</a>
+        </div>
+    
+        <form id="login-form" class="vertical-form" method="post" action="/authentication/login">
+          <label class="input-textfield">
+            <span>Email</span>
+            <input name="email" autocomplete="email" placeholder="Email" />
+          </label>
+          <label class="input-textfield">
+            <span>Password</span>
+            <input 
+              name="password"
+              type="password"
+              autocomplete="current-password"
+              placeholder="Password"
+            />
+          </label>
+
+          <div class="button-align-right">
+            <input class="primary-button" type="submit" value="Login" />
+          </div>
+        </form>
+      </div>
+    </div>
   </body>
 
 </html>
