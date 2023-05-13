@@ -37,26 +37,8 @@ router.get("/create", async (request, response) => {
   }
 });
 
-// Make a move in a game
-/*
-router.post("/:id/move", async (request, response) => {
-  const { id: game_id } = request.params;
-  const { id: user_id } = request.session.user;
-  const { x, y } = request.body;
-  const io = request.app.get("io");
-
-  try {
-    const state = await Games.isMoveValid(game_id, user_id, x, y);
-    io.emit(GAME_UPDATED(game_id), state);
-
-    response.status(200).send();
-  } catch (error) {
-    console.log({ error });
-
-    response.status(500).send();
-  }
-});
-*/
+// Make a move in a game (tic-tac-toe example)
+// ...
 
 // Join a game
 router.get("/:id/join", async (request, response) => {
@@ -78,12 +60,11 @@ router.get("/:id/join", async (request, response) => {
   }
 });
 
-/*
 // Win a game
 router.get("/:id/win", async (request, response) => {
   const { id: game_id } = request.params;
   const { id: user_id } = request.session.user;
   const io = request.app.get("io");
-*/
+});
 
 module.exports = router;

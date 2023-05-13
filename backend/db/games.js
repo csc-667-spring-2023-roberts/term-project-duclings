@@ -47,41 +47,28 @@ const join = (game_id, user_id) => db.none(JOIN_GAME_SQL, [game_id, user_id]);
 
 // Create and return the game state
 const state = async (game_id, user_id) => {
+  // Dealing with the game_users table
   const users = await db.many(
     "SELECT users.username, users.id AS user_id FROM users, game_users WHERE users.id=game_users.user_id AND game_users.game_id=$1 ORDER BY game_users.created_at",
     [game_id]
   );
 
-  const board = await db.many(
-    "SELECT user_id, x_coordinate, y_coordinate FROM game_moves WHERE game_id=$1",
-    [game_id]
-  );
+  // Dealing with the game_moves table
+  /*const board = await db.many(
+    // "SELECT user_id FROM game_moves WHERE game_id=$1",
+    // [game_id]
+  );*/
 
   return {
     game_id,
     users,
     user_id,
-    board,
+    // ,
+    // board,
   };
 };
 
-const isMoveValid = async (game_id, user_id, x, y) => {
-  await db.one(
-    "SELECT * FROM game_users WHERE game_users.game_id=$1 AND game_users.user_id=$2 AND current_player=true",
-    [game_id, user_id]
-  );
+// Check if move is valid (tic-tac-toe example)
+// ....
 
-  await db.one(
-    "SELECT * FROM game_moves WHERE game_moves.game_id=$1 AND game_moves.user_id=0 AND x_coordinate=$2 AND y_coordinate=$3",
-    [game_id, x, y]
-  );
-
-  await db.none(
-    "UPDATE game_moves SET user_id=$1 WHERE game_id=$2 AND x_coordinate=$3 AND y_coordinate=$4",
-    [user_id, game_id, x, y]
-  );
-
-  return await state(game_id, user_id);
-};
-
-module.exports = { create, list, join, state, isMoveValid };
+module.exports = { create, list, join, state };
