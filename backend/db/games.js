@@ -15,13 +15,6 @@ const create = async (creator_id) => {
   // Game board gets set up here:
   // In his tic-tac-toe example, he used a for loop to iterate through the board and insert each cell as an empty move (set to zero, aka not a user) into the database
   const board = [];
-  for (let row = 0; row < 3; row++) {
-    for (let column = 0; column < 3; column++) {
-      board.push(
-        `INSERT INTO game_moves (game_id, user_id, x_coordinate, y_coordinate) VALUES ($1, 0, ${row}, ${column})`
-      );
-    }
-  }
 
   // Inserts the board into the database after filling it with empty moves
   await Promise.all(board.map((query) => db.none(query, [id])));
@@ -47,13 +40,17 @@ const JOIN_GAME_SQL =
 
 const join = (game_id, user_id) => db.none(JOIN_GAME_SQL, [game_id, user_id]);
 
+// const endGame = (game_id) =>
+
+// 1. destroy the game in the database
+// 2.
+
+// Create and return the game state
 const state = async (game_id, user_id) => {
   const users = await db.many(
     "SELECT users.username, users.id AS user_id FROM users, game_users WHERE users.id=game_users.user_id AND game_users.game_id=$1 ORDER BY game_users.created_at",
     [game_id]
   );
-  users[0].letter = "X";
-  users[1].letter = "Y";
 
   const board = await db.many(
     "SELECT user_id, x_coordinate, y_coordinate FROM game_moves WHERE game_id=$1",

@@ -38,6 +38,7 @@ router.get("/create", async (request, response) => {
 });
 
 // Make a move in a game
+/*
 router.post("/:id/move", async (request, response) => {
   const { id: game_id } = request.params;
   const { id: user_id } = request.session.user;
@@ -55,6 +56,7 @@ router.post("/:id/move", async (request, response) => {
     response.status(500).send();
   }
 });
+*/
 
 // Join a game
 router.get("/:id/join", async (request, response) => {
@@ -75,5 +77,13 @@ router.get("/:id/join", async (request, response) => {
     response.redirect("/lobby");
   }
 });
+
+/*
+// Win a game
+router.get("/:id/win", async (request, response) => {
+  const { id: game_id } = request.params;
+  const { id: user_id } = request.session.user;
+  const io = request.app.get("io");
+*/
 
 module.exports = router;
