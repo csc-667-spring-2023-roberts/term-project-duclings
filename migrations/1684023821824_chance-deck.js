@@ -4,37 +4,33 @@
  * @param {import("node-pg-migrate/dist/types").MigrationBuilder} pgm
  */
 exports.up = (pgm) => {
-  pgm.createTable("game_users", {
+  pgm.createTable("chance_deck", {
+    deck_id: {
+      type: "integer",
+      notNull: true,
+      primaryKey: true,
+    },
     game_id: {
       type: "integer",
       notNull: true,
     },
-    user_id: {
+    card_id: {
       type: "integer",
       notNull: true,
     },
-    current_player: {
-      type: "boolean",
-      default: false,
-    },
-    play_order: {
-      type: "integer",
+    card_text: {
+      type: "text",
       notNull: true,
     },
-    board_position: {
-      type: "integer",
+    action_type: {
+      type: "varchar(256)",
       notNull: true,
-      default: 1,
+      unique: true,
     },
-    dice_doubles_count: {
-      type: "integer",
+    action_data: {
+      type: "varchar(256)",
       notNull: true,
-      default: 0,
-    },
-    alive: {
-      type: "boolean",
-      notNull: true,
-      default: true,
+      unique: true,
     },
   });
 };
@@ -43,5 +39,5 @@ exports.up = (pgm) => {
  * @param {import("node-pg-migrate/dist/types").MigrationBuilder} pgm
  */
 exports.down = (pgm) => {
-  pgm.dropTable("game_users");
+  pgm.dropTable("chance_deck");
 };

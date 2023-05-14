@@ -7,6 +7,7 @@
   </template>
 </div>
 <div class="game-options-div">
-  <button type="submit" class="ms-btn ms-action" value="Win Game">Win Game</button>
-  <button type="submit" class="ms-btn ms-action" value="Create Game">End Game</button>
+  <form action="/api/games/endGame" method="POST">
+    <button type="submit" class="ms-btn ms-action" value="End Game">End Game</button>
+  </form>
 </div>

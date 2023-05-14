@@ -1,0 +1,21 @@
+[
+  {
+    "board_position": 1,
+    "property_color": "brown",
+    "property_cost": 60,
+    "mortgage_payout": 30,
+    "unmortgage_cost": 33,
+    "payout_base": 2,
+    "house_cost_1": 50,
+    "house_cost_2": 50,
+    "house_cost_3": 50,
+    "house_cost_4": 50,
+    "hotel_cost": 50,
+    "payout_house_1": 10,
+    "payout_house_2": 30,
+    "payout_house_3": 90,
+    "payout_house_4": 160,
+    "payout_hotel": 250
+  },
+  {}
+]

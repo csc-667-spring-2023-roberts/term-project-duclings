@@ -4,37 +4,40 @@
  * @param {import("node-pg-migrate/dist/types").MigrationBuilder} pgm
  */
 exports.up = (pgm) => {
-  pgm.createTable("game_users", {
+  pgm.createTable("board_spaces", {
     game_id: {
       type: "integer",
       notNull: true,
-    },
-    user_id: {
-      type: "integer",
-      notNull: true,
-    },
-    current_player: {
-      type: "boolean",
-      default: false,
-    },
-    play_order: {
-      type: "integer",
-      notNull: true,
+      primaryKey: true,
     },
     board_position: {
       type: "integer",
       notNull: true,
-      default: 1,
     },
-    dice_doubles_count: {
+    property_name: {
+      type: "varchar(255)",
+      notNull: true,
+    },
+    property_owned: {
+      type: "boolean",
+      default: false,
+    },
+    property_owner: {
       type: "integer",
       notNull: true,
-      default: 0,
     },
-    alive: {
-      type: "boolean",
+    space_type: {
+      type: "varchar(255)",
       notNull: true,
-      default: true,
+      primaryKey: false,
+    },
+    house_count: {
+      type: "integer",
+      notNull: true,
+    },
+    mortgaged: {
+      type: "boolean",
+      default: false,
     },
   });
 };
@@ -43,5 +46,5 @@ exports.up = (pgm) => {
  * @param {import("node-pg-migrate/dist/types").MigrationBuilder} pgm
  */
 exports.down = (pgm) => {
-  pgm.dropTable("game_users");
+  pgm.dropTable("board_spaces");
 };

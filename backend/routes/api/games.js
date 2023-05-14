@@ -60,11 +60,23 @@ router.get("/:id/join", async (request, response) => {
   }
 });
 
-// Win a game
-router.get("/:id/win", async (request, response) => {
-  const { id: game_id } = request.params;
+// End a game
+router.post("/endGame", async (request, response) => {
   const { id: user_id } = request.session.user;
+  const { id: game_id } = await Games.getGame(user_id);
   const io = request.app.get("io");
+
+  try {
+    await Games.endGame(game_id, user_id);
+
+    //const state = await Games.state(game_id, user_id);
+    //io.emit(GAME_UPDATED(game_id), state);
+
+    response.redirect(`/lobby`);
+    console.log("Game ended");
+  } catch (error) {
+    console.log({ error });
+  }
 });
 
 module.exports = router;
