@@ -1,5 +1,7 @@
 <html>
-<%- include('partials/head.ejs') %>
+    <head>
+        <%- include('partials/head.ejs') %>
+    </head>
     <body>
         <h1>Lobby Page (Authenticated) - Hi <%= user.username %> (<%= user.id %>)</h1>
         <%- include('partials/authenticated_nav.ejs') %>
