@@ -98,11 +98,37 @@ const list = async (user_id) => db.any(GAMES_LIST_SQL, [user_id]);
 const join = async (game_id, user_id) => {
   // User is added to game (they are added to the game_users table with the corresponding game_id)
 
+  // Read player_count from game from games table with game_id
+  let player_count = await db.one(
+    "SELECT player_count FROM games WHERE id=$1",
+    [game_id]
+  );
+
+  // Add 1 to player_count
+  console.log("Player count: ");
+  console.log(player_count);
+  player_count = player_count.player_count;
+  player_count++;
+  console.log("Player count: " + player_count);
+
+  // Insert into game_users table with game_id, user_id, player_count
+  const JOIN_GAME_SQL =
+    "INSERT INTO game_users (game_id, user_id, play_order) VALUES ($1, $2, $3)";
+  db.none(JOIN_GAME_SQL, [game_id, user_id, player_count]);
+
+  // Update games table with new player_count
+  db.none("UPDATE games SET player_count=$1 WHERE id=$2", [
+    player_count,
+    game_id,
+  ]);
+
+  /*
   let players = await db.any("SELECT * FROM game_users where game_id=1");
   let player_order = players.length + 1;
   const JOIN_GAME_SQL =
     "INSERT INTO game_users (game_id, user_id, play_order) VALUES ($1, $2, $3)";
   db.none(JOIN_GAME_SQL, [game_id, user_id, player_order]);
+  */
 };
 
 const END_GAME_SQL = `DELETE FROM games WHERE id=$1`;
