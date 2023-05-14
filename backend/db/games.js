@@ -14,8 +14,9 @@ const checkPropertyInfo = async () => {
   }
 
   if (rowCount === 0) {
+    const propertiesPath = __dirname + "/properties.json";
     // Read the property data from the JSON file
-    const properties = JSON.parse(fs.readFileSync("./properties.json"));
+    const properties = JSON.parse(fs.readFileSync(propertiesPath));
     // Insert the property data into the database
     for (const property of properties) {
       const query = {
@@ -62,35 +63,26 @@ const checkIfInAGame = async (user_id) => {
   }
 };
 
-const CREATE_GAME_SQL =
-  "INSERT INTO games (completed) VALUES (false) RETURNING *";
-const INSERT_FIRST_USER_SQL =
-  "INSERT INTO game_users (user_id, game_id, current_player) VALUES ($1, $2, true)";
-
 const create = async (creator_id) => {
   if (!checkIfInAGame(creator_id)) {
     // Returns true, don't run code
     //console.log("Player is already in a game");
     throw new Error("Error thrown: Player is already in a game");
   }
-  // if (checkIfInAGame) { return; }
-
   checkPropertyInfo(); // Checks if property_info table is populated. If not, populates it so users can play the game
 
-  // Creates game instance for this game (in the database in the games table)
-  const { id } = await db.one(CREATE_GAME_SQL);
+  const CREATE_GAME_SQL =
+    "INSERT INTO games (completed) VALUES (false) RETURNING *";
+  const INSERT_FIRST_USER_SQL =
+    "INSERT INTO game_users (user_id, game_id, current_player, play_order) VALUES ($1, $2, true, 1)";
 
-  // Insert creator of the game into the game (into the games_users column of the game row)
-  await db.none(INSERT_FIRST_USER_SQL, [creator_id, id]);
+  const { id } = await db.one(CREATE_GAME_SQL); // Creates game instance for this game (in the database in the games table)
+  await db.none(INSERT_FIRST_USER_SQL, [creator_id, id]); // Insert creator of the game into the game (into the games_users column of the game row)
 
-  // Game board gets set up here:
-  const board = [];
+  //const board = []; // Game board gets set up here
+  //await Promise.all(board.map((query) => db.none(query, [id]))); // Inserts the board into the database after filling it with empty moves
 
-  // Inserts the board into the database after filling it with empty moves
-  await Promise.all(board.map((query) => db.none(query, [id])));
-
-  // Returns the game id
-  return { id };
+  return { id }; // Returns the game id
 };
 
 const getGame = async (user_id) =>
@@ -98,9 +90,6 @@ const getGame = async (user_id) =>
 
 const GAMES_LIST_SQL = `SELECT * FROM games;`;
 const list = async (user_id) => db.any(GAMES_LIST_SQL, [user_id]);
-
-const JOIN_GAME_SQL =
-  "INSERT INTO game_users (game_id, user_id) VALUES ($1, $2)";
 
 const join = (game_id, user_id) => {
   if (checkIfInAGame(user_id)) {
@@ -110,8 +99,12 @@ const join = (game_id, user_id) => {
     // Returns false, run code and allow player to join a game
     console.log("Player is not in a game");
   }
-  //code here
-  db.none(JOIN_GAME_SQL, [game_id, user_id]);
+  // User is added to game (they are added to the game_users table with the corresponding game_id)
+  let player_order =
+    db.one("SELECT COUNT(*) FROM game_users WHERE game_id=$1", [game_id]) + 1;
+  const JOIN_GAME_SQL =
+    "INSERT INTO game_users (game_id, user_id, player_order) VALUES ($1, $2, $3)";
+  db.none(JOIN_GAME_SQL, [game_id, user_id, player_order]);
 };
 
 const END_GAME_SQL = `DELETE FROM games WHERE id=$1`;
