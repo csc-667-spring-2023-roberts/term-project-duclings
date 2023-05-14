@@ -1,17 +1,12 @@
 const db = require("./connection.js");
-
 const fs = require("fs");
 
 // Ensures the property_info table is populated. Otherwise, no game can be played properly
 const checkPropertyInfo = async () => {
   console.log("Checking if property info is correct...");
-  const { rows } = await db.query("SELECT COUNT(*) FROM property_info");
+  const rows = await db.any("SELECT * FROM property_info");
 
-  try {
-    const rowCount = parseInt(rows[0].count);
-  } catch (error) {
-    rowCount = 0;
-  }
+  const rowCount = rows.length;
 
   if (rowCount === 0) {
     const propertiesPath = __dirname + "/properties.json";
@@ -21,13 +16,14 @@ const checkPropertyInfo = async () => {
     for (const property of properties) {
       const query = {
         text: `INSERT INTO property_info
-           (board_position, property_color, property_cost, mortgage_payout, unmortgage_cost, payout_base,
+           (board_position, property_name, property_color, property_cost, mortgage_payout, unmortgage_cost, payout_base,
             house_cost_1, house_cost_2, house_cost_3, house_cost_4, hotel_cost,
             payout_house_1, payout_house_2, payout_house_3, payout_house_4, payout_hotel)
            VALUES
-           ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)`,
+           ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)`,
         values: [
           property.board_position,
+          property.property_name,
           property.property_color,
           property.property_cost,
           property.mortgage_payout,
@@ -56,19 +52,27 @@ const checkPropertyInfo = async () => {
 const checkIfInAGame = async (user_id) => {
   console.log("Checking if player is in a game...");
   try {
-    await db.one("SELECT * FROM game_users WHERE user_id=$1", [user_id]);
-    return true; // If player is in game
+    const result = await db.oneOrNone(
+      "SELECT * FROM game_users WHERE user_id=$1",
+      [user_id]
+    );
+    if (result !== null && result !== undefined) {
+      return true; // If player is in game
+    } else {
+      return false; // If no rows returned
+    }
   } catch (error) {
-    return false; // If no rows returned
+    console.log(error);
+    return false; // If error occurred
   }
 };
 
 const create = async (creator_id) => {
-  if (!checkIfInAGame(creator_id)) {
-    // Returns true, don't run code
-    //console.log("Player is already in a game");
+  /* // Save this for later ...
+  if (checkIfInAGame(creator_id)) {
     throw new Error("Error thrown: Player is already in a game");
   }
+  */
   checkPropertyInfo(); // Checks if property_info table is populated. If not, populates it so users can play the game
 
   const CREATE_GAME_SQL =
@@ -88,22 +92,16 @@ const create = async (creator_id) => {
 const getGame = async (user_id) =>
   db.one("SELECT game_id FROM games_users WHERE user_id=$1", [user_id]);
 
-const GAMES_LIST_SQL = `SELECT * FROM games;`;
+const GAMES_LIST_SQL = `SELECT * FROM games WHERE joinable=true;`;
 const list = async (user_id) => db.any(GAMES_LIST_SQL, [user_id]);
 
-const join = (game_id, user_id) => {
-  if (checkIfInAGame(user_id)) {
-    // Returns true, don't run code
-    console.log("Player is already in a game");
-  } else {
-    // Returns false, run code and allow player to join a game
-    console.log("Player is not in a game");
-  }
+const join = async (game_id, user_id) => {
   // User is added to game (they are added to the game_users table with the corresponding game_id)
-  let player_order =
-    db.one("SELECT COUNT(*) FROM game_users WHERE game_id=$1", [game_id]) + 1;
+
+  let players = await db.any("SELECT * FROM game_users where game_id=1");
+  let player_order = players.length + 1;
   const JOIN_GAME_SQL =
-    "INSERT INTO game_users (game_id, user_id, player_order) VALUES ($1, $2, $3)";
+    "INSERT INTO game_users (game_id, user_id, play_order) VALUES ($1, $2, $3)";
   db.none(JOIN_GAME_SQL, [game_id, user_id, player_order]);
 };
 
@@ -114,7 +112,7 @@ const endGame = (game_id) => db.none(END_GAME_SQL, [game_id]);
 const state = async (game_id, user_id) => {
   // Dealing with the game_users table
   const users = await db.many(
-    "SELECT users.username, users.id AS user_id FROM users, game_users WHERE users.id=game_users.user_id AND game_users.game_id=$1 ORDER BY game_users.created_at",
+    "SELECT users.username, users.id AS user_id FROM users, game_users WHERE users.id=game_users.user_id AND game_users.game_id=$1 ORDER BY game_users.play_order",
     [game_id]
   );
 

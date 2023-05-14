@@ -10,19 +10,23 @@ exports.up = (pgm) => {
       notNull: true,
       primaryKey: true,
     },
+    property_name: {
+      type: "varchar(255)",
+      notNull: true,
+    },
     property_color: {
-      type: "integer",
+      type: "varchar(255)",
       notNull: true,
     },
     property_cost: {
-      type: "boolean",
-      default: false,
+      type: "integer",
+      notNull: true,
     },
     mortgage_payout: {
       type: "integer",
       notNull: true,
     },
-    unmortgage_payout: {
+    unmortgage_cost: {
       type: "integer",
       notNull: true,
     },

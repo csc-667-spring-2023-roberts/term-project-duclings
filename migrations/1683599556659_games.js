@@ -37,7 +37,7 @@ exports.up = (pgm) => {
     player_count: {
       type: "integer",
       notNull: true,
-      default: 0,
+      default: 1,
     },
   });
 };
