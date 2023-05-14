@@ -1,4 +1,37 @@
 <html>
+    <head>
+        <%- include('partials/head.ejs') %>
+    </head>
+    <body>
+        <h1>Lobby Page (Authenticated) - Hi <%= user.username %> (<%= user.id %>)</h1>
+        <%- include('partials/authenticated_nav.ejs') %>
+            <div class="col-sm">
+                <a href="/api/games/create" id="create-game-link" class="ms-btn ms-action">Create Game</a>
+                <ul id="game-list">
+                    <% for(let i=0; i < games.length; i++) { %>
+                        <li>
+                            <a href="/api/games/<%= games[i].id %>/join">Join <span>
+                                    <%= games[i].id %>
+                                </span></a>
+                        </li>
+                        <% } %>
+                </ul>
+            </div>
+            <%- include('partials/chat.ejs') %>
+            <!-- <div id="chat-container">
+                <div id="messages"></div>
+                <label>
+                    <input id="chatMessage" name="chat-message" placeholder="Message..." />
+                </label>
+            </div> -->
+            <template id="available-game-item">
+                <div>
+                    <li>
+                        <a href="#">Join <span>42</span></a>
+                    </li>
+                </div>
+            </template>
+    </body>
 <%- include('partials/head.ejs') %>
 
   <body>
