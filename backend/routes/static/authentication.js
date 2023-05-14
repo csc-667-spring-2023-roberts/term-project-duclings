@@ -74,7 +74,6 @@ router.post("/login", async (request, response) => {
     }
   } catch (error) {
     console.log({ error });
-
     response.render("login", {
       title: "Team Ducling's term project",
       email,

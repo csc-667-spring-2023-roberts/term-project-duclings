@@ -32,7 +32,7 @@ router.get("/create", async (request, response) => {
     response.redirect(`/games/${game_id}`);
   } catch (error) {
     console.log({ error });
-
+    // display message stored in "error"
     response.redirect("/lobby");
   }
 });
