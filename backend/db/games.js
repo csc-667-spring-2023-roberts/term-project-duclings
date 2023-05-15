@@ -81,7 +81,7 @@ const create = async (creator_id) => {
     "INSERT INTO game_users (user_id, game_id, current_player, play_order) VALUES ($1, $2, true, 1)";
 
   const { id } = await db.one(CREATE_GAME_SQL); // Creates game instance for this game (in the database in the games table)
-  await db.none(INSERT_FIRST_USER_SQL, [creator_id, id]); // Insert creator of the game into the game (into the games_users column of the game row)
+  await db.none(INSERT_FIRST_USER_SQL, [creator_id, id]); // Insert creator of the game into the game (into the game_users column of the game row)
 
   //const board = []; // Game board gets set up here
   //await Promise.all(board.map((query) => db.none(query, [id]))); // Inserts the board into the database after filling it with empty moves
@@ -90,7 +90,7 @@ const create = async (creator_id) => {
 };
 
 const getGame = async (user_id) =>
-  db.one("SELECT game_id FROM games_users WHERE user_id=$1", [user_id]);
+  db.one("SELECT game_id FROM game_users WHERE user_id=$1", [user_id]);
 
 const GAMES_LIST_SQL = `SELECT * FROM games WHERE joinable=true;`;
 const list = async (user_id) => db.any(GAMES_LIST_SQL, [user_id]);
