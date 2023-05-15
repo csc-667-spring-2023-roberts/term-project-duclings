@@ -1,0 +1,26 @@
+<html>
+
+<head>
+    <%- include('partials/head'); %>
+        <link rel="stylesheet" href="/stylesheets/board.css" />
+</head>
+
+<body>
+    <%- include('./partials/navbar'); %>
+            <h1>Game <%= id %> Page</h1>
+            <div id="game-board">
+                <%- include('partials/board'); %>
+            </div>
+            <div id="users-list">
+                <template id="user-item">
+                    <div class="user"></div>
+                </template>
+            </div>
+            <div class="game-options-div">
+                <form action="/api/games/endGame" method="POST">
+                    <button type="submit" class="ms-btn ms-action" value="End Game">End Game</button>
+                </form>
+            </div>
+</body>
+
+</html>
