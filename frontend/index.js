@@ -5,6 +5,12 @@ import { gameUpdatedHandler } from "./games/updated";
 import { getGameId } from "./games/get-game-id";
 
 const socket = io();
+
+socket.on("gameEnded", () => {
+  alert("Game ended");
+  window.location.href = "/lobby";
+});
+
 const game_id = getGameId(document.location.pathname);
 gameCreatedHandler(socket);
 gameUpdatedHandler(socket, game_id);

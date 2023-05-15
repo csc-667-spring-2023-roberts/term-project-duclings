@@ -89,8 +89,16 @@ const create = async (creator_id) => {
   return { id }; // Returns the game id
 };
 
-const getGame = async (user_id) =>
-  db.one("SELECT game_id FROM game_users WHERE user_id=$1", [user_id]);
+const getGame = async (user_id) => {
+  console.log("Getting game ID...");
+  console.log(user_id);
+  const game_id = await db.one(
+    "SELECT game_id FROM game_users WHERE user_id=$1",
+    [user_id]
+  );
+  console.log(parseInt(game_id.game_id));
+  return parseInt(game_id.game_id);
+};
 
 const GAMES_LIST_SQL = `SELECT * FROM games WHERE joinable=true;`;
 const list = async (user_id) => db.any(GAMES_LIST_SQL, [user_id]);
@@ -121,18 +129,16 @@ const join = async (game_id, user_id) => {
     player_count,
     game_id,
   ]);
-
-  /*
-  let players = await db.any("SELECT * FROM game_users where game_id=1");
-  let player_order = players.length + 1;
-  const JOIN_GAME_SQL =
-    "INSERT INTO game_users (game_id, user_id, play_order) VALUES ($1, $2, $3)";
-  db.none(JOIN_GAME_SQL, [game_id, user_id, player_order]);
-  */
 };
 
-const END_GAME_SQL = `DELETE FROM games WHERE id=$1`;
-const endGame = (game_id) => db.none(END_GAME_SQL, [game_id]);
+//const startGame = async (game_id, user_id) => {
+
+const endGame = async (game_id, user_id) => {
+  const END_GAME_SQL = `DELETE FROM games WHERE id=$1`;
+  const DELETE_GAME_USERS_SQL = `DELETE FROM game_users WHERE game_id=$1`;
+  await db.none(END_GAME_SQL, [game_id]);
+  await db.none(DELETE_GAME_USERS_SQL, [game_id]);
+};
 
 // Create and return the game state
 const state = async (game_id, user_id) => {

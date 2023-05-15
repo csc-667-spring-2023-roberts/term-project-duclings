@@ -63,14 +63,14 @@ router.get("/:id/join", async (request, response) => {
 // End a game
 router.post("/endGame", async (request, response) => {
   const { id: user_id } = request.session.user;
-  const { id: game_id } = await Games.getGame(user_id);
+  const game_id = await Games.getGame(user_id);
+
   const io = request.app.get("io");
 
   try {
     await Games.endGame(game_id, user_id);
 
-    //const state = await Games.state(game_id, user_id);
-    //io.emit(GAME_UPDATED(game_id), state);
+    io.emit("gameEnded");
 
     response.redirect(`/lobby`);
     console.log("Game ended");
