@@ -5,7 +5,10 @@
  */
 exports.up = (pgm) => {
   pgm.createTable("chat", {
-    id: "id",
+    game_id: {
+      type: "integer",
+      notNull: true,
+    },
     sender_id: {
       type: "integer",
       notNull: true,

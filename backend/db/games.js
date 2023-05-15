@@ -80,9 +80,14 @@ const create = async (creator_id) => {
   const INSERT_FIRST_USER_SQL =
     "INSERT INTO game_users (user_id, game_id, current_player, play_order) VALUES ($1, $2, true, 1)";
 
+  const INSERT_INVENTORY_SQL =
+    "INSERT INTO inventory (user_id, game_id) VALUES ($1, $2)";
+  const INSERT_PROPERTY_INV_SQL =
+    "INSERT INTO property_inventory (user_id, game_id) VALUES ($1, $2)";
   const { id } = await db.one(CREATE_GAME_SQL); // Creates game instance for this game (in the database in the games table)
   await db.none(INSERT_FIRST_USER_SQL, [creator_id, id]); // Insert creator of the game into the game (into the game_users column of the game row)
-
+  await db.none(INSERT_INVENTORY_SQL, [creator_id, id]);
+  await db.none(INSERT_PROPERTY_INV_SQL, [creator_id, id]);
   //const board = []; // Game board gets set up here
   //await Promise.all(board.map((query) => db.none(query, [id]))); // Inserts the board into the database after filling it with empty moves
 
@@ -120,12 +125,18 @@ const join = async (game_id, user_id) => {
   console.log("Player count: " + player_count);
 
   // Insert into game_users table with game_id, user_id, player_count
-  const JOIN_GAME_SQL =
+  const INSERT_GAME_USER_SQL =
     "INSERT INTO game_users (game_id, user_id, play_order) VALUES ($1, $2, $3)";
-  db.none(JOIN_GAME_SQL, [game_id, user_id, player_count]);
+  const INSERT_INVENTORY_SQL =
+    "INSERT INTO inventory (user_id, game_id) VALUES ($1, $2)";
+  const INSERT_PROPERTY_INV_SQL =
+    "INSERT INTO property_inventory (user_id, game_id) VALUES ($1, $2)";
+  await db.none(INSERT_GAME_USER_SQL, [game_id, user_id, player_count]);
+  await db.none(INSERT_INVENTORY_SQL, [user_id, game_id]);
+  await db.none(INSERT_PROPERTY_INV_SQL, [user_id, game_id]);
 
   // Update games table with new player_count
-  db.none("UPDATE games SET player_count=$1 WHERE id=$2", [
+  await db.none("UPDATE games SET player_count=$1 WHERE id=$2", [
     player_count,
     game_id,
   ]);
@@ -136,8 +147,12 @@ const join = async (game_id, user_id) => {
 const endGame = async (game_id, user_id) => {
   const END_GAME_SQL = `DELETE FROM games WHERE id=$1`;
   const DELETE_GAME_USERS_SQL = `DELETE FROM game_users WHERE game_id=$1`;
-  await db.none(END_GAME_SQL, [game_id]);
-  await db.none(DELETE_GAME_USERS_SQL, [game_id]);
+  const DELETE_INVENTORY_SQL = `DELETE FROM inventory WHERE game_id=$1`;
+  const DELETE_PROPERTY_INV_SQL = `DELETE FROM property_inventory WHERE game_id=$1`;
+  await db.none(END_GAME_SQL, [game_id]); // Deletes the game
+  await db.none(DELETE_GAME_USERS_SQL, [game_id]); // Deletes all game_users of the game
+  await db.none(DELETE_INVENTORY_SQL, [game_id]); // Deletes all inventories in the game
+  await db.none(DELETE_PROPERTY_INV_SQL, [game_id]); // Deletes all property inventories in the game
 };
 
 // Create and return the game state

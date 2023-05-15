@@ -10,45 +10,59 @@ exports.up = (pgm) => {
       notNull: true,
       primaryKey: true,
     },
+    game_id: {
+      type: "integer",
+      notNull: true,
+    },
     railroads_owned: {
       type: "integer",
       notNull: true,
+      default: 0,
     },
     utilities_owned: {
       type: "integer",
       notNull: true,
+      default: 0,
     },
     browns_owned: {
       type: "integer",
       notNull: true,
+      default: 0,
     },
     light_blues_owned: {
       type: "integer",
       notNull: true,
+      default: 0,
     },
     magentas_owned: {
       type: "integer",
       notNull: true,
+      default: 0,
     },
     oranges_owned: {
       type: "integer",
       notNull: true,
+      default: 0,
     },
     reds_owned: {
       type: "integer",
       notNull: true,
+      default: 0,
     },
     yellows_owned: {
       type: "integer",
       notNull: true,
+      default: 0,
     },
     greens_owned: {
       type: "integer",
       notNull: true,
+      default: 0,
     },
     dark_blues_owned: {
       type: "integer",
       notNull: true,
+      default: 0,
     },
   });
 };
