@@ -1,0 +1,17 @@
+<html>
+    <head>
+        <%- include('partials/head.ejs') %>
+    </head>
+    <body>
+        <%- include('./partials/navbar'); %>
+        <!-- <h1>Home page (Unauthenticated)</h1> -->
+        <div class="center-container">
+            <%- include('./partials/logo'); %>
+            <div class="main-action-buttons">
+                <a class="circle-button" href="/authentication/login" class="login-button">Log In</a>
+                <a class="circle-button" href="/authentication/sign-up" class="signup-button">Sign Up</a>
+            </div>
+        </div>
+    </body>
+    
+</html>

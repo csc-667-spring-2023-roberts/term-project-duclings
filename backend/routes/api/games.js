@@ -15,7 +15,7 @@ router.get("/", async (request, response) => {
   } catch (error) {
     console.log({ error });
 
-    response.redirect("/lobby");
+    response.redirect("/home");
   }
 });
 
@@ -33,7 +33,7 @@ router.get("/create", async (request, response) => {
   } catch (error) {
     console.log({ error });
     // display message stored in "error"
-    response.redirect("/lobby");
+    response.redirect("/home");
   }
 });
 
@@ -56,7 +56,7 @@ router.get("/:id/join", async (request, response) => {
   } catch (error) {
     console.log({ error });
 
-    response.redirect("/lobby");
+    response.redirect("/home");
   }
 });
 

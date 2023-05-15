@@ -17,6 +17,7 @@ require("dotenv").config();
 
 const db = require("./db/connection.js");
 
+const frontPageRoutes = require("./routes/static/front-page.js");
 const homeRoutes = require("./routes/static/home.js");
 const gamesRoutes = require("./routes/static/games.js");
 const lobbyRoutes = require("./routes/static/lobby.js");
@@ -72,7 +73,8 @@ app.set("view engine", "ejs");
 app.use(express.static(path.join(".", "backend", "static")));
 app.use(addSessionLocals);
 
-app.use("/", homeRoutes);
+app.use("/", frontPageRoutes);
+app.use("/home", isAuthenticated, homeRoutes);
 app.use("/games", isAuthenticated, gamesRoutes);
 app.use("/api/games", isAuthenticated, apiGamesRoutes);
 app.use("/lobby", isAuthenticated, lobbyRoutes);

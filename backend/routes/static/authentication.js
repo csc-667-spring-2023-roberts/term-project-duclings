@@ -27,7 +27,7 @@ router.post("/sign-up", async (request, response) => {
       email,
     };
 
-    response.redirect("/lobby");
+    response.redirect("/home");
   } catch (error) {
     console.log({ error });
 
@@ -68,7 +68,7 @@ router.post("/login", async (request, response) => {
       };
 
       console.log(request.session);
-      response.redirect("/lobby");
+      response.redirect("/home");
     } else {
       throw "User did not provide valid credentials";
     }
