@@ -1159,19 +1159,19 @@
             ? ArrayBuffer.isView(t)
             : t.buffer instanceof ArrayBuffer,
         $ = Object.prototype.toString,
-        Q =
+        G =
           "function" == typeof Blob ||
           ("undefined" != typeof Blob &&
             "[object BlobConstructor]" === $.call(Blob)),
-        G =
+        Q =
           "function" == typeof File ||
           ("undefined" != typeof File &&
             "[object FileConstructor]" === $.call(File));
       function X(t) {
         return (
           (W && (t instanceof ArrayBuffer || J(t))) ||
-          (Q && t instanceof Blob) ||
-          (G && t instanceof File)
+          (G && t instanceof Blob) ||
+          (Q && t instanceof File)
         );
       }
       function Z(t, e) {
@@ -2020,11 +2020,14 @@
         bt = s(258),
         vt = document.querySelector("#game-list"),
         _t = document.querySelector("#available-game-item"),
-        kt = yt(),
-        wt = (function (t) {
-          var e = t.substring(t.lastIndexOf("/") + 1);
-          return "lobby" === e ? 0 : parseInt(e);
-        })(document.location.pathname);
+        kt = yt();
+      kt.on("gameEnded", function () {
+        alert("Game ended"), (window.location.href = "/lobby");
+      });
+      var wt = (function (t) {
+        var e = t.substring(t.lastIndexOf("/") + 1);
+        return "lobby" === e ? 0 : parseInt(e);
+      })(document.location.pathname);
       !(function (t) {
         t.on(bt.GAME_CREATED, function (t) {
           var e = t.game_id;
