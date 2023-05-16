@@ -48,25 +48,114 @@ const checkPropertyInfo = async () => {
   }
 };
 
-// Checks if player is already in a game so they can't create or join another one
-const checkIfInAGame = async (user_id) => {
-  console.log("Checking if player is in a game...");
-  try {
-    const result = await db.oneOrNone(
-      "SELECT * FROM game_users WHERE user_id=$1",
-      [user_id]
-    );
-    if (result !== null && result !== undefined) {
-      return true; // If player is in game
-    } else {
-      return false; // If no rows returned
+// Ensures the chance_cards table is populated. Otherwise, no game can be played properly
+const checkChanceCards = async () => {
+  console.log("Checking if chance cards are correct...");
+  const rows = await db.any("SELECT * FROM chance_deck");
+
+  const rowCount = rows.length;
+
+  if (rowCount === 0) {
+    const chanceCardsPath = __dirname + "/chance_cards.json";
+    // Read the chance card data from the JSON file
+    const chanceCards = JSON.parse(fs.readFileSync(chanceCardsPath));
+    // Insert the chance card data into the database
+    for (const chanceCard of chanceCards) {
+      const query = {
+        text: `INSERT INTO chance_deck
+            (card_id, card_text, action_type, action_data)
+            VALUES
+            ($1, $2, $3, $4)`,
+        values: [
+          chanceCard.card_id,
+          chanceCard.card_text,
+          chanceCard.action_type,
+          chanceCard.action_data,
+        ],
+      };
+      await db.query(query);
     }
-  } catch (error) {
-    console.log(error);
-    return false; // If error occurred
+  } else {
+    console.log("chance_cards table is already populated");
   }
 };
 
+// Ensures the community_chest_cards table is populated. Otherwise, no game can be played properly
+const checkCommunityChestCards = async () => {
+  console.log("Checking if community chest cards are correct...");
+  const rows = await db.any("SELECT * FROM community_chest_deck");
+
+  const rowCount = rows.length;
+
+  if (rowCount === 0) {
+    const communityChestCardsPath = __dirname + "/community_chest_cards.json";
+    // Read the community chest card data from the JSON file
+    const communityChestCards = JSON.parse(
+      fs.readFileSync(communityChestCardsPath)
+    );
+    // Insert the community chest card data into the database
+    for (const communityChestCard of communityChestCards) {
+      const query = {
+        text: `INSERT INTO community_chest_deck
+            (card_id, card_text, action_type, action_data)
+            VALUES
+            ($1, $2, $3, $4)`,
+        values: [
+          communityChestCard.card_id,
+          communityChestCard.card_text,
+          communityChestCard.action_type,
+          communityChestCard.action_data,
+        ],
+      };
+      await db.query(query);
+    }
+  } else {
+    console.log("community_chest_cards table is already populated");
+  }
+};
+
+// Gets the list of all the players in the current game being played and sort them by play_order
+const getPlayers = async (game_id) => {
+  try {
+    const result = await db.any(
+      "SELECT * FROM game_users WHERE game_id=$1 ORDER BY play_order ASC",
+      [game_id]
+    );
+    if (result !== null && result !== undefined) {
+      return result; // If players are in a game
+    } else {
+      return []; // If no rows returned
+    }
+  } catch (error) {
+    console.log(error);
+    return []; // If error occurred
+  }
+};
+
+// Creates a game board to be used for a new game
+const createGameBoard = async (game_id) => {
+  const boardSpacesPath = __dirname + "/board_spaces.json";
+  // Read the board space data from the JSON file
+  const boardSpaces = JSON.parse(fs.readFileSync(boardSpacesPath));
+  // Insert the board space data into the database
+  for (const boardSpace of boardSpaces) {
+    const query = {
+      text: `INSERT INTO board_spaces
+          (game_id, board_position, space_name, space_type)
+          VALUES
+          ($1, $2, $3, $4)`,
+      values: [
+        game_id,
+        boardSpace.board_position,
+        boardSpace.space_name,
+        boardSpace.space_type,
+      ],
+    };
+    await db.query(query);
+  }
+};
+
+// Creates a new game
 const create = async (creator_id) => {
   /* // Save this for later ...
   if (checkIfInAGame(creator_id)) {
@@ -74,6 +163,8 @@ const create = async (creator_id) => {
   }
   */
   checkPropertyInfo(); // Checks if property_info table is populated. If not, populates it so users can play the game
+  checkChanceCards(); // Checks if chance_cards table is populated. If not, populates it so users can play the game
+  checkCommunityChestCards(); // Checks if community_chest_cards table is populated. If not, populates it so users can play the game
 
   const CREATE_GAME_SQL =
     "INSERT INTO games (completed) VALUES (false) RETURNING *";
@@ -88,8 +179,7 @@ const create = async (creator_id) => {
   await db.none(INSERT_FIRST_USER_SQL, [creator_id, id]); // Insert creator of the game into the game (into the game_users column of the game row)
   await db.none(INSERT_INVENTORY_SQL, [creator_id, id]);
   await db.none(INSERT_PROPERTY_INV_SQL, [creator_id, id]);
-  //const board = []; // Game board gets set up here
-  //await Promise.all(board.map((query) => db.none(query, [id]))); // Inserts the board into the database after filling it with empty moves
+  createGameBoard(id); // Creates the game board for this game (in the database in the board_spaces table)
 
   return { id }; // Returns the game id
 };
@@ -149,10 +239,12 @@ const endGame = async (game_id, user_id) => {
   const DELETE_GAME_USERS_SQL = `DELETE FROM game_users WHERE game_id=$1`;
   const DELETE_INVENTORY_SQL = `DELETE FROM inventory WHERE game_id=$1`;
   const DELETE_PROPERTY_INV_SQL = `DELETE FROM property_inventory WHERE game_id=$1`;
+  const DELETE_GAME_BOARD_SQL = `DELETE FROM board_spaces WHERE game_id=$1`;
   await db.none(END_GAME_SQL, [game_id]); // Deletes the game
   await db.none(DELETE_GAME_USERS_SQL, [game_id]); // Deletes all game_users of the game
   await db.none(DELETE_INVENTORY_SQL, [game_id]); // Deletes all inventories in the game
   await db.none(DELETE_PROPERTY_INV_SQL, [game_id]); // Deletes all property inventories in the game
+  await db.none(DELETE_GAME_BOARD_SQL, [game_id]); // Deletes the game board
 };
 
 // Create and return the game state
@@ -170,4 +262,4 @@ const state = async (game_id, user_id) => {
   };
 };
 
-module.exports = { create, list, join, endGame, getGame, state };
+module.exports = { create, list, join, endGame, getGame, getPlayers, state };

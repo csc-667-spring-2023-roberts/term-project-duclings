@@ -8,7 +8,6 @@ exports.up = (pgm) => {
     game_id: {
       type: "integer",
       notNull: true,
-      primaryKey: true,
     },
     user_id: {
       type: "integer",

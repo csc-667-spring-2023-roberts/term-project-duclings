@@ -8,8 +8,8 @@ const router = express.Router();
 const SALT_ROUNDS = 10;
 
 // Sign up route
-router.get("/sign-up", (_req, res) => {
-  res.render("sign-up", { title: "Team Ducling's term project" });
+router.get("/sign-up", (_req, response) => {
+  response.render("sign-up", { title: "Team Ducling's term project" });
 });
 
 // Creating a new user and encrypting their password
@@ -40,8 +40,8 @@ router.post("/sign-up", async (request, response) => {
 });
 
 // Login route
-router.get("/login", (_req, res) => {
-  res.render("login", { title: "Team Ducling's term project" });
+router.get("/login", (_req, response) => {
+  response.render("login", { title: "Team Ducling's term project" });
 });
 
 // Checking to see if provided username and password are valid

@@ -8,13 +8,12 @@ exports.up = (pgm) => {
     game_id: {
       type: "integer",
       notNull: true,
-      primaryKey: true,
     },
     board_position: {
       type: "integer",
       notNull: true,
     },
-    property_name: {
+    space_name: {
       type: "varchar(255)",
       notNull: true,
     },
@@ -25,15 +24,16 @@ exports.up = (pgm) => {
     property_owner: {
       type: "integer",
       notNull: true,
+      default: -1,
     },
     space_type: {
       type: "varchar(255)",
       notNull: true,
-      primaryKey: false,
     },
     house_count: {
       type: "integer",
       notNull: true,
+      default: 0,
     },
     mortgaged: {
       type: "boolean",

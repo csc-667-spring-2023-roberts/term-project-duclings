@@ -5,15 +5,6 @@
  */
 exports.up = (pgm) => {
   pgm.createTable("chance_deck", {
-    deck_id: {
-      type: "integer",
-      notNull: true,
-      primaryKey: true,
-    },
-    game_id: {
-      type: "integer",
-      notNull: true,
-    },
     card_id: {
       type: "integer",
       notNull: true,
@@ -25,12 +16,10 @@ exports.up = (pgm) => {
     action_type: {
       type: "varchar(256)",
       notNull: true,
-      unique: true,
     },
     action_data: {
       type: "varchar(256)",
       notNull: true,
-      unique: true,
     },
   });
 };

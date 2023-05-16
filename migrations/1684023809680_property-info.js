@@ -8,7 +8,6 @@ exports.up = (pgm) => {
     board_position: {
       type: "integer",
       notNull: true,
-      primaryKey: true,
     },
     property_name: {
       type: "varchar(255)",

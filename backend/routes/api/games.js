@@ -29,7 +29,7 @@ router.get("/create", async (request, response) => {
     const { id: game_id, created_at } = await Games.create(user_id);
 
     io.emit(GAME_CREATED, { game_id, created_at });
-    response.redirect(`/games/${game_id}`);
+    response.redirect(`/lobby/${game_id}`);
   } catch (error) {
     console.log({ error });
     // display message stored in "error"
@@ -52,7 +52,7 @@ router.get("/:id/join", async (request, response) => {
     const state = await Games.state(game_id, user_id);
     io.emit(GAME_UPDATED(game_id), state);
 
-    response.redirect(`/games/${game_id}`);
+    response.redirect(`/lobby/${game_id}`);
   } catch (error) {
     console.log({ error });
 
@@ -72,7 +72,7 @@ router.post("/endGame", async (request, response) => {
 
     io.emit("gameEnded");
 
-    response.redirect(`/lobby`);
+    response.redirect(`/home`);
     console.log("Game ended");
   } catch (error) {
     console.log({ error });

@@ -58,8 +58,8 @@ const server = initSockets(app, sessionMiddleware);
 
 // Test middleware to print session info on every request
 /*
-app.use((req, res, next) => {
-  console.log("Session object: ", req.session);
+app.use((request, response, next) => {
+  console.log("Session object: ", request.session);
   next();
 });
 */

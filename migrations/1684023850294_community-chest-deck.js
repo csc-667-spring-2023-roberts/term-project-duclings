@@ -5,15 +5,6 @@
  */
 exports.up = (pgm) => {
   pgm.createTable("community_chest_deck", {
-    deck_id: {
-      type: "integer",
-      notNull: true,
-      primaryKey: true,
-    },
-    game_id: {
-      type: "integer",
-      notNull: true,
-    },
     card_id: {
       type: "integer",
       notNull: true,
