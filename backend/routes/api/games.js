@@ -4,18 +4,38 @@ const { GAME_CREATED, GAME_UPDATED } = require("../../../shared/constants.js");
 
 const router = express.Router();
 
-// See list of games
+// Get list of games
 router.get("/", async (request, response) => {
   const { id: user_id } = request.session.user;
 
   try {
-    const available_games = await Games.list(user_id);
+    const available_games = await Games.listGames(user_id);
 
     response.json(available_games);
   } catch (error) {
     console.log({ error });
 
     response.redirect("/home");
+  }
+});
+
+// Get list of players
+router.get("/", async (request, response) => {
+  // Saves the user_id of whoever created the game
+  const { game_id, id: user_id } = request.session.user;
+  const io = request.app.get("io");
+
+  try {
+    const current_players = await Games.listPlayers(user_id);
+
+    io.emit(GAME_UPDATED(game_id), state);
+    response.redirect(`/lobby/${game_id}`);
+
+    response.json(current_players);
+  } catch (error) {
+    console.log({ error });
+
+    response.redirect("/lobby");
   }
 });
 

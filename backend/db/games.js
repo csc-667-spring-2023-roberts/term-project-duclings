@@ -114,24 +114,6 @@ const checkCommunityChestCards = async () => {
   }
 };
 
-// Gets the list of all the players in the current game being played and sort them by play_order
-const getPlayers = async (game_id) => {
-  try {
-    const result = await db.any(
-      "SELECT * FROM game_users WHERE game_id=$1 ORDER BY play_order ASC",
-      [game_id]
-    );
-    if (result !== null && result !== undefined) {
-      return result; // If players are in a game
-    } else {
-      return []; // If no rows returned
-    }
-  } catch (error) {
-    console.log(error);
-    return []; // If error occurred
-  }
-};
-
 // Creates a game board to be used for a new game
 const createGameBoard = async (game_id) => {
   const boardSpacesPath = __dirname + "/board_spaces.json";
@@ -195,8 +177,16 @@ const getGame = async (user_id) => {
   return parseInt(game_id.game_id);
 };
 
+// Gets the list of all games that are joinable
 const GAMES_LIST_SQL = `SELECT * FROM games WHERE joinable=true;`;
-const list = async (user_id) => db.any(GAMES_LIST_SQL, [user_id]);
+const listGames = async (user_id) => db.any(GAMES_LIST_SQL, [user_id]);
+
+// Gets the list of all the players in the current game being played and sort them by play_order
+// const PLAYERS_LIST_SQL = `SELECT user_id FROM game_users WHERE game_id=$1 ORDER BY play_order ASC;`;
+// TEMP WORKAROUND SO THAT THE SAME USER ISN'T LISTED MULTIPLE TIMES IN THE PLAYERS LIST WHEN JOINING THE SAME GAME - needs to be prevented in the future
+const PLAYERS_LIST_SQL = `SELECT DISTINCT ON (user_id) user_id, play_order FROM game_users WHERE game_id = $1 ORDER BY user_id, play_order ASC;`;
+
+const listPlayers = async (game_id) => db.any(PLAYERS_LIST_SQL, [game_id]);
 
 const join = async (game_id, user_id) => {
   // User is added to game (they are added to the game_users table with the corresponding game_id)
@@ -262,4 +252,12 @@ const state = async (game_id, user_id) => {
   };
 };
 
-module.exports = { create, list, join, endGame, getGame, getPlayers, state };
+module.exports = {
+  create,
+  listGames,
+  listPlayers,
+  join,
+  endGame,
+  getGame,
+  state,
+};
