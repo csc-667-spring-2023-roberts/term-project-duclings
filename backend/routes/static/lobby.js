@@ -11,15 +11,13 @@ router.get("/:id", async (request, response) => {
   try {
     // const game_id = await Games.getGame(id);
     const current_players = await Games.listPlayers(id);
-    console.log("current_players: ", current_players);
 
     const player_usernames = [];
     for (let i = 0; i < current_players.length; i++) {
       const username = await Users.getUsername(current_players[i].user_id);
       player_usernames.push({ username });
     }
-    console.log("player_usernames: ", player_usernames);
-    console.log("user_id: ", user_id);
+
     // To get attributes of an object - needed to call when printing on the ejs page
     /*const attributes = Object.keys(current_players);
     for (let i = 0; i < attributes.length; i++) {

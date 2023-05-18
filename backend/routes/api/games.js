@@ -27,7 +27,7 @@ router.get("/", async (request, response) => {
 
   try {
     const current_players = await Games.listPlayers(user_id);
-
+    console.log("game_id: ", game_id);
     io.emit(GAME_UPDATED(game_id), state);
     response.redirect(`/lobby/${game_id}`);
 
