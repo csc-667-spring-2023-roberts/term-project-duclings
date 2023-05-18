@@ -1,6 +1,11 @@
 const express = require("express");
 const Games = require("../../db/games.js");
-const { GAME_CREATED, GAME_UPDATED } = require("../../../shared/constants.js");
+const Users = require("../../db/users.js");
+const {
+  GAME_CREATED,
+  GAME_UPDATED,
+  GAME_JOINED,
+} = require("../../../shared/constants.js");
 
 const router = express.Router();
 
@@ -71,6 +76,13 @@ router.get("/:id/join", async (request, response) => {
 
     const state = await Games.state(game_id, user_id);
     io.emit(GAME_UPDATED(game_id), state);
+
+    const username = await Users.getUsername(user_id);
+    console.log(
+      "the username being sent to lobby websocket is " + username.username
+    );
+    //io.emit(GAME_JOINED,(username.username));
+    io.to(`game:${game_id}`).emit(GAME_JOINED, username.username);
 
     response.redirect(`/lobby/${game_id}`);
   } catch (error) {

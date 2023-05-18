@@ -17,6 +17,7 @@ export function createGameListItem(game_id, _created_at) {
 // Listens for new games being created
 export function gameCreatedHandler(socket) {
   socket.on(GAME_CREATED, ({ game_id, created_at }) => {
+    console.log("gameCreatedHandler is called");
     gameList.appendChild(createGameListItem(game_id, created_at));
   });
 }

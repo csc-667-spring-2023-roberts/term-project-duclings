@@ -3,6 +3,7 @@ import events from "../backend/sockets/constants";
 import { gameCreatedHandler } from "./games/created";
 import { gameUpdatedHandler } from "./games/updated";
 import { getGameId } from "./games/get-game-id";
+import { joinGameHandler } from "./games/update-games-list";
 
 const socket = io();
 
@@ -14,6 +15,7 @@ socket.on("gameEnded", () => {
 const game_id = getGameId(document.location.pathname);
 gameCreatedHandler(socket);
 gameUpdatedHandler(socket, game_id);
+joinGameHandler(socket);
 
 const messageContainer = document.querySelector("#messages");
 
