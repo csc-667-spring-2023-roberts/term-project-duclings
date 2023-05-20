@@ -2062,7 +2062,7 @@
         var o = document.createElement("span");
         o.innerText = s;
         var a = document.createElement("span");
-        (a.innerText = n), i.appendChild(r, o, a), Et.append(display);
+        (a.innerText = n), i.appendChild(r, o, a), Et.append(i, r, o, a);
       }),
         document
           .querySelector("input#chatMessage")
