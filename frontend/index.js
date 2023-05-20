@@ -31,7 +31,7 @@ socket.on(events.CHAT_MESSAGE_RECEIVED, ({ username, message, timestamp }) => {
 
   entry.appendChild(displayName, displayMessage, displayTimestamp);
 
-  messageContainer.append(display);
+  messageContainer.append(entry);
 });
 
 document

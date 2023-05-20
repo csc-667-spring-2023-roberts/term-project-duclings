@@ -8,6 +8,9 @@
 <body>
     <%- include('./partials/navbar'); %>
             <h1>Game <%= id %> Page</h1>
+            <div class = "chat">
+                <%- include('partials/chat.ejs') %>
+                </div>
             <div id="game-board">
                 <%- include('partials/board'); %>
             </div>
