@@ -1,10 +1,10 @@
 :root {
-  --border-color: black;
-  --brown: rgb(152, 67, 1);
-  --jail-color: rgb(189, 100, 52);
-  --space-background: rgb(246, 233, 198);
-  --space-background-hover: rgb(217, 203, 161);
-  --center-color: white;
+    --border-color: black;
+    --brown: rgb(152, 67, 1);
+    --jail-color: rgb(189, 100, 52);
+    --space-background: rgb(246, 233, 198);
+    --space-background-hover: rgb(217, 203, 161);
+    --center-color: rgb(255, 248, 229);
 
   --chance-card: #ffa500;
   --chance-card-hover: rgb(194, 126, 0);
