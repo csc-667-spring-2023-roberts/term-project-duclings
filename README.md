@@ -1,6 +1,7 @@
 # Monopoly
 
 CSC 667 Spring 2023 Term Project
+Live Deployment: https://monopoly-a50j.onrender.com/
 
 # Group: Team Duclings
 
