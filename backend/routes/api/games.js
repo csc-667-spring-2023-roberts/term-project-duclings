@@ -83,7 +83,7 @@ router.get("/:id/join", async (request, response) => {
     );
     //io.emit(GAME_JOINED,(username.username));
     // io.sockets.in(`${game_id}`).emit(GAME_JOINED, username.username);
-    io.to(`game:${game_id}`).emit(GAME_JOINED, username.username);
+    io.to(`${game_id}`).emit(GAME_JOINED, username.username);
 
     response.redirect(`/lobby/${game_id}`);
   } catch (error) {
