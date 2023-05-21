@@ -31,7 +31,7 @@ router.get("/:id", async (request, response) => {
 
     response.render("lobby", {
       id: game_id,
-      title: "Lobby",
+      title: "Monopoly | Waiting for Game " + game_id,
       playersList: player_usernames,
       messages: chat,
     });
@@ -39,7 +39,7 @@ router.get("/:id", async (request, response) => {
     console.log({ error });
     response.render("lobby", {
       id: game_id,
-      title: "Lobby",
+      title: "Monopoly | Waiting for Game " + game_id,
       playersList: [],
       messages: [],
     });

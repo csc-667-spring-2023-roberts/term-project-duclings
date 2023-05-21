@@ -9,13 +9,16 @@ router.get("/", async (request, response) => {
   try {
     const available_games = await Games.listGames(user_id);
     response.render("home", {
-      // title: "Team Ducling's term project",
+      title: "Monopoly | Home Page",
       // user: req.session.user,
       games: available_games,
     });
   } catch (error) {
     console.log({ error });
-    response.render("home", { games: [] });
+    response.render("home", {
+      title: "Monopoly | Home Page",
+      games: [],
+    });
   }
 });
 

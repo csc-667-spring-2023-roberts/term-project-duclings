@@ -10,7 +10,7 @@ router.get("/:id", async (request, response) => {
     const chat = await Chat.getMessages(game_id);
     response.render("game-session", {
       id: game_id,
-      title: "Game",
+      title: "Monopoly | Game " + game_id,
       messages: chat,
     });
   } catch (error) {
@@ -19,7 +19,7 @@ router.get("/:id", async (request, response) => {
 
   response.render("game-session", {
     id: game_id,
-    title: "Game",
+    title: "Monopoly | Game " + game_id,
     messages: [],
   });
 });

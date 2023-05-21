@@ -9,7 +9,7 @@ const SALT_ROUNDS = 10;
 
 // Sign up route
 router.get("/sign-up", (_req, response) => {
-  response.render("sign-up", { title: "Team Ducling's term project" });
+  response.render("sign-up", { title: "Monopoly | Sign Up" });
 });
 
 // Creating a new user and encrypting their password
@@ -32,7 +32,7 @@ router.post("/sign-up", async (request, response) => {
     console.log({ error });
 
     response.render("sign-up", {
-      title: "Team Ducling's term project",
+      title: "Monopoly | Sign Up",
       username,
       email,
     });
@@ -41,7 +41,7 @@ router.post("/sign-up", async (request, response) => {
 
 // Login route
 router.get("/login", (_req, response) => {
-  response.render("login", { title: "Team Ducling's term project" });
+  response.render("login", { title: "Monopoly | Log In" });
 });
 
 // Checking to see if provided username and password are valid
@@ -75,7 +75,7 @@ router.post("/login", async (request, response) => {
   } catch (error) {
     console.log({ error });
     response.render("login", {
-      title: "Team Ducling's term project",
+      title: "Monopoly | Log In",
       email,
       message: "Error!",
     });
