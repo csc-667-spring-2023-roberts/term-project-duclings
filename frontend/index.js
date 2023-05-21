@@ -10,11 +10,11 @@ const game_id = getGameId(document.location.pathname);
 
 const socket = io();
 
-socket.emit("join", { game_id, username: "test" });
+socket.emit("join", { game_id });
 
 socket.on("gameEnded", () => {
   alert("Game ended");
-  window.location.href = "/lobby";
+  window.location.href = "/home";
 });
 
 gameCreatedHandler(socket);

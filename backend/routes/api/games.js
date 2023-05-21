@@ -103,7 +103,8 @@ router.post("/endGame", async (request, response) => {
   try {
     await Games.endGame(game_id, user_id);
 
-    io.emit("gameEnded");
+    io.in(`${game_id}`).emit("gameEnded");
+    //io.emit("gameEnded");
 
     response.redirect(`/home`);
     console.log("Game ended");
