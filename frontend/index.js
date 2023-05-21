@@ -23,9 +23,9 @@ socket.on(events.CHAT_MESSAGE_RECEIVED, ({ username, message, timestamp }) => {
   const entry = document.createElement("div");
 
   const displayName = document.createElement("span");
-  displayName.innerText = username;
+  displayName.innerText = "¤" + username + " :  ";
   const displayMessage = document.createElement("span");
-  displayMessage.innerText = message;
+  displayMessage.innerText = message + "  ";
   const displayTimestamp = document.createElement("span");
   displayTimestamp.innerText = timestamp;
 
