@@ -31,7 +31,7 @@ socket.on(events.CHAT_MESSAGE_RECEIVED, ({ username, message, timestamp }) => {
 
   entry.appendChild(displayName, displayMessage, displayTimestamp);
 
-  messageContainer.append(display);
+  messageContainer.append(entry, displayName, displayMessage, displayTimestamp);
 });
 
 document
@@ -42,7 +42,7 @@ document
     }
 
     const message = event.target.value;
-    event.target.value = "";
+    console.log("Sending " + message);
 
     fetch("/chat/0", {
       method: "post",

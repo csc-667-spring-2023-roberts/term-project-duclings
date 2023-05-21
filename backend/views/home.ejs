@@ -8,8 +8,15 @@
     <div class="container">
       <div class="row">
         <div class="col-sm">
-          <form method="get" action="/api/games/create">
-            <button type="submit" class="ms-btn ms-action" value="Create Game">Create Game</button>
+          <!-- <form method="get" action="/api/games/create">
+            <button type="submit" class="ms-btn ms-action" value="Create Game">Create Game</button> 
+            removed because hitting enter on chat creates game  -->
+            <a
+            href="/api/games/create"
+            id="create-game-link"
+            class="ms-btn ms-action"
+            >Create Game</a
+          >
             <h2>Available Games</h2>
             <ul id="game-list">
               <% for(let i=0; i < games.length; i++) { %>
