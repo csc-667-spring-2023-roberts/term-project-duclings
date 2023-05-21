@@ -10,7 +10,7 @@
     </h1>
     <div id="player-list-div">
       <h2>In This Game</h2>
-      <ul id="player-list">
+      <ol id="player-list">
         <% for(let i=0; i < playersList.length; i++) { %>
           <li>
             <span>
@@ -18,13 +18,13 @@
             </span>
           </li>
           <% } %>
-      </ul>
+      </ol>
     </div>
     <div class = "chat">
       <%- include('partials/chat.ejs') %>
       </div>
     <div class="game-options-div">
-      <button onclick="window.location.href='/games/<%=id %>'">Start Game</button>
+      <button onclick="window.location.href='/games/<%= id %>'">Start Game</button>
       <!-- <form action="/games/<%=id %>">
                 <button type="submit" class="ms-btn ms-action" value="Start Game">Start Game</button>
             </form> -->
@@ -39,5 +39,3 @@
       </div>
     </template>
 </body>
-
-</html>
