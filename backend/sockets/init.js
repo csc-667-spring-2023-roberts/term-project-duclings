@@ -9,8 +9,13 @@ const initSockets = (app, sessionMiddleware) => {
 
   io.engine.use(sessionMiddleware);
 
-  io.on("connection", (_socket) => {
-    console.log("Connection");
+  io.on("connection", async (socket) => {
+    // Whenever there's a new connection, handle it accordingly by joining it to the necessary game ID (roomID)
+    console.log("Connection", socket.id);
+
+    const gameID = socket.handshake.query.roomID;
+    console.log("gameID: ", gameID);
+    socket.join(gameID);
   });
 
   app.set("io", io);

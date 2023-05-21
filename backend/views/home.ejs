@@ -3,13 +3,13 @@
   <%- include('partials/head.ejs') %>
 </head>
 <body>
-  <h1>Home Page (Authenticated) - Hi <%= user.username %> (id: <%= user.id %>)</h1>
   <%- include('partials/authenticated-nav.ejs') %>
+  <h1>Home Page (Authenticated) - Hi <%= user.username %> (id: <%= user.id %>)</h1>
     <div class="container">
       <div class="row">
         <div class="col-sm">
           <form method="get" action="/api/games/create">
-            <button type="submit" class="ms-btn ms-action" value="Create Game">Create Game</button>
+            <button type="submit" class="primary-button" value="Create Game">Create Game</button>
             <h2>Available Games</h2>
             <ul id="game-list">
               <% for(let i=0; i < games.length; i++) { %>
@@ -20,6 +20,7 @@
                 </li>
                 <% } %>
             </ul>
+          </form> 
         </div>
         <%- include('partials/chat.ejs') %>
       </div>
@@ -31,5 +32,6 @@
         </li>
       </div>
     </template>
+    <button class="primary-button" id="test-socket-button" value="Test">Test Socket Connection</button>
 </body>
 </html>
