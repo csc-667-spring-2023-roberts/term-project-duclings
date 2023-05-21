@@ -12,9 +12,12 @@ const initSockets = (app, sessionMiddleware) => {
   io.on("connection", (_socket) => {
     console.log("Connection");
 
-    _socket.on("join", ({ game_id }) => {
-      console.log("Joining room: " + game_id);
+    _socket.on("join", (game_id) => {
+      console.log(_socket.id + "is Joining room: " + game_id);
+      console.log(game_id);
       _socket.join(game_id);
+      console.log("all socket rooms connected:");
+      console.log(_socket.adapter.rooms);
     });
   });
 

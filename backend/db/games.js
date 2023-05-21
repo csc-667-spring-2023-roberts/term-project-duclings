@@ -168,7 +168,6 @@ const create = async (creator_id) => {
 
 const getGame = async (user_id) => {
   console.log("Getting game ID...");
-  console.log(user_id);
   const game_id = await db.one(
     "SELECT game_id FROM game_users WHERE user_id=$1",
     [user_id]

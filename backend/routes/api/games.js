@@ -83,7 +83,7 @@ router.get("/:id/join", async (request, response) => {
     );
     //io.emit(GAME_JOINED,(username.username));
     // io.sockets.in(`${game_id}`).emit(GAME_JOINED, username.username);
-    io.to(`${game_id}`).emit(GAME_JOINED, username.username);
+    io.in(game_id).emit(GAME_JOINED, username.username); // not working
 
     response.redirect(`/lobby/${game_id}`);
   } catch (error) {
@@ -103,7 +103,8 @@ router.post("/endGame", async (request, response) => {
   try {
     await Games.endGame(game_id, user_id);
 
-    io.in(`${game_id}`).emit("gameEnded");
+    console.log("game_id to be ended: ", game_id);
+    io.in(game_id).emit("gameEnded");
     //io.emit("gameEnded");
 
     response.redirect(`/home`);

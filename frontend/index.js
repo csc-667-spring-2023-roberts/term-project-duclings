@@ -10,7 +10,7 @@ const game_id = getGameId(document.location.pathname);
 
 const socket = io();
 
-socket.emit("join", { game_id });
+socket.emit("join", game_id);
 
 socket.on("gameEnded", () => {
   alert("Game ended");
