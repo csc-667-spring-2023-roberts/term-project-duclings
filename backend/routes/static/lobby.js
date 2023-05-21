@@ -2,15 +2,16 @@ const express = require("express");
 const Games = require("../../db/games.js");
 const Users = require("../../db/users.js");
 const router = express.Router();
+const Chat = require("../../db/chat");
 
 router.get("/:id", async (request, response) => {
-  const { id } = request.params;
-  const { user_id } = request.session.user;
+  const { id: game_id } = request.params;
+  // const { user_id } = request.session.user;
 
   //console.log("PRINTING THE SESSION USER HERE" + request.session.user);
   try {
-    // const game_id = await Games.getGame(id);
-    const current_players = await Games.listPlayers(id);
+    // const game_id = await Games.getGame(user_id);
+    const current_players = await Games.listPlayers(game_id);
 
     const player_usernames = [];
     for (let i = 0; i < current_players.length; i++) {
@@ -26,15 +27,22 @@ router.get("/:id", async (request, response) => {
       console.log("Key:", key);
       console.log("Value:", value);
     }*/
+    const chat = await Chat.getMessages(game_id);
 
     response.render("lobby", {
-      id,
-      title: "Team Ducling's term project",
+      id: game_id,
+      title: "Lobby",
       playersList: player_usernames,
+      messages: chat,
     });
   } catch (error) {
     console.log({ error });
-    response.render("lobby", { id, playersList: [] });
+    response.render("lobby", {
+      id: game_id,
+      title: "Lobby",
+      playersList: [],
+      messages: [],
+    });
   }
 });
 

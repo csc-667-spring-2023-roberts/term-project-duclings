@@ -1,12 +1,27 @@
 const express = require("express");
-
 const router = express.Router();
+const Chat = require("../../db/chat");
 
-router.get("/:id", (request, response) => {
-  const { id } = request.params;
+router.get("/:id", async (request, response) => {
+  const { id: game_id } = request.params;
+  // console.log("game-session game_id: " + game_id);
 
-  // response.render("game-session", { id, title: "Team Ducling's term project" });
-  response.render("game-session", { id, title: "Team Ducling's term project" });
+  try {
+    const chat = await Chat.getMessages(game_id);
+    response.render("game-session", {
+      id: game_id,
+      title: "Game",
+      messages: chat,
+    });
+  } catch (error) {
+    console.log({ error });
+  }
+
+  response.render("game-session", {
+    id: game_id,
+    title: "Game",
+    messages: [],
+  });
 });
 
 module.exports = router;

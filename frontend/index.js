@@ -17,9 +17,13 @@ gameCreatedHandler(socket);
 gameUpdatedHandler(socket, game_id);
 joinGameHandler(socket);
 
+socket.emit("join", { game_id, username: "test" });
+
 const messageContainer = document.querySelector("#messages");
 
 socket.on(events.CHAT_MESSAGE_RECEIVED, ({ username, message, timestamp }) => {
+  console.log("message received");
+
   const entry = document.createElement("div");
 
   const displayName = document.createElement("span");
@@ -44,7 +48,7 @@ document
     const message = event.target.value;
     event.target.value = "";
 
-    fetch("/chat/0", {
+    fetch(`/chat/${game_id}`, {
       method: "post",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ message }),
