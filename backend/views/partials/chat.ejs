@@ -1,20 +1,22 @@
 <div id="chat-container">
     <div id="messages">
-        <% for(let i=0; i < messages.length; i++) { %>
-            <div class="message">
-                <span>
-                    <%= messages[i].username %>
-                </span>
-                <span>
-                    <%= messages[i].message %>
-                </span>
-                <span>
-                    <%= messages[i].created_at %>
+        <% for(let i=messages.length - 1; i >= 0; i--) { %>
+            <div class="message-line">
+                <div class="message">
+                    <p class="username">
+                        <%= messages[i].username %>
+                    </p>
+                    <p class="body">
+                        <%= messages[i].message %>
+                    </p>
+                </div>
+                <span class="timestamp">
+                    <%= new Date(messages[i].created_at).toLocaleTimeString("en-US") %>
                 </span>
             </div>
             <% } %>
     </div>
-    <label>
+    <label class="input-textfield">
         <input id="chatMessage" name="chat-message" placeholder="Message..." />
     </label>
 </div>
