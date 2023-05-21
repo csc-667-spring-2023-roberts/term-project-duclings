@@ -2,15 +2,28 @@
 
 <head>
     <%- include('partials/head'); %>
-        <link rel="stylesheet" href="/stylesheets/board.css" />
+    <link rel="stylesheet" href="/stylesheets/board.css" />
+    <style>
+        #board-container {
+            width: fit-content;
+            margin: auto;
+        }
+    </style>
 </head>
 
 <body>
     <%- include('./partials/navbar'); %>
-            <h1>Game <%= id %> Page</h1>
-            <div id="game-board">
+            <div id="board-container">
                 <%- include('partials/board'); %>
+                <div id="player-pieces">
+                    <div class="player" id="p1"></div>
+                    <div class="player" id="p2"></div>
+                    <div class="player" id="p3"></div>
+                </div>
             </div>
+            <% for (let i = 1; i < 42; i++) { %>
+                <%- include('partials/cell-popup', {id: i}); %>
+            <% } %>
             <div id="users-list">
                 <template id="user-item">
                     <div class="user"></div>
@@ -22,5 +35,61 @@
                 </form>
             </div>
 </body>
+
+<script>
+
+console.log("Load");
+for (let i = 1; i < 42; i++) {
+    document.getElementById(`b-${i}`).addEventListener('click', () => {
+        console.log(i);
+        document.getElementById(`card-popup-${i}`).showModal();
+    });
+// console.log(document.getElementById(`b-${i}`));
+}
+
+function movePlayer(playerId, spaceId) {
+    // console.log(playerId, spaceId)
+    let board = document.getElementById("board-main")
+    let space = document.getElementById(`b-${spaceId}`)
+    let player = document.getElementById(`p${playerId}`)
+    // player.style.backgroundColor = "green";
+    // player.style.opacity = "0.5";
+    // console.log(board.getBoundingClientRect(), space.getBoundingClientRect());
+    let boardRect = board.getBoundingClientRect();
+    let spaceRect = space.getBoundingClientRect();
+    let playerRect = player.getBoundingClientRect();
+    let padding = 4;
+
+    if (spaceId == "b-11") {
+        let jailRect = document.getElementById("b-12").getBoundingClientRect();
+
+        let jvRight = board.getBoundingClientRect().right - space.getBoundingClientRect().right + jailRect.width;
+        let jvTop = board.getBoundingClientRect().bottom - space.getBoundingClientRect().top - playerRect.height;
+        let jvBottom = board.getBoundingClientRect().bottom - space.getBoundingClientRect().bottom;
+
+        let jhLeft = board.getBoundingClientRect().right - space.getBoundingClientRect().right + jailRect.width;
+        let jhRight = board.getBoundingClientRect().right - space.getBoundingClientRect().right;
+        // player.style.bottom = Math.floor(Math.random() * (jvTop - jvBottom + 1) + jvBottom);
+        // player.style.right = Math.floor(Math.random() * (jvLeft - jvRight + 1) + jvRight);
+        let cell = Math.round(Math.random());
+        if (cell == 1) {
+            player.style.bottom = Math.floor(Math.random() * (jvTop - jvBottom + 1) + jvBottom);
+            player.style.right = jvRight;
+        } else {
+            player.style.bottom = jvBottom;
+            player.style.right = Math.floor(Math.random() * (jhLeft - jhRight + 1) + jhRight)
+        }
+    } else {
+        let cellBottom = board.getBoundingClientRect().bottom - space.getBoundingClientRect().bottom + padding;
+        let cellTop = board.getBoundingClientRect().bottom - space.getBoundingClientRect().top - playerRect.height - padding;
+        let cellLeft = board.getBoundingClientRect().right - space.getBoundingClientRect().left - playerRect.width - padding;
+        let cellRight = board.getBoundingClientRect().right - space.getBoundingClientRect().right + padding;
+
+        player.style.bottom = Math.floor(Math.random() * (cellTop - cellBottom + 1) + cellBottom);
+        player.style.right = Math.floor(Math.random() * (cellLeft - cellRight + 1) + cellRight);
+    }
+
+}
+</script>
 
 </html>
