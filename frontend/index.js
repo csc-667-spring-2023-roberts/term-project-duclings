@@ -46,7 +46,7 @@ document
     }
 
     const message = event.target.value;
-    event.target.value = "";
+    console.log("Sending " + message);
 
     fetch(`/chat/${game_id}`, {
       method: "post",
