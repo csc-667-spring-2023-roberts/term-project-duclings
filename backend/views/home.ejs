@@ -5,8 +5,8 @@
 </head>
 
 <body>
-  <h1>Home Page (Authenticated) - Hi <%= user.username %> (id: <%= user.id %>)</h1>
   <%- include('partials/authenticated-nav.ejs') %>
+  <h1>Home Page (Authenticated) - Hi <%= user.username %> (id: <%= user.id %>)</h1>
     <div class="container">
       <div class="row">
         <div class="col-sm">
@@ -24,6 +24,7 @@
                 </li>
                 <% } %>
             </ul>
+          </form> 
         </div>
       </div>
     </div>
@@ -34,6 +35,7 @@
         </li>
       </div>
     </template>
+    <button class="primary-button" id="test-socket-button" value="Test">Test Socket Connection</button>
 </body>
 
 </html>

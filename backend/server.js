@@ -81,6 +81,10 @@ app.use("/lobby", isAuthenticated, lobbyRoutes);
 app.use("/authentication", authenticationRoutes);
 app.use("/chat", chatRoutes);
 
+app.use("/gamesession", (req, res) => {
+  res.render("game-session");
+});
+
 server.listen(port, () => {
   console.log(`Server started on port ${port}`);
 });
