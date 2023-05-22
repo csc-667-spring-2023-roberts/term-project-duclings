@@ -236,6 +236,10 @@ const endGame = async (game_id, user_id) => {
   await db.none(DELETE_GAME_BOARD_SQL, [game_id]); // Deletes the game board
 };
 
+const start = async (game_id, user_id) => {
+  console.log("Starting game...");
+};
+
 // Create and return the game state
 const state = async (game_id, user_id) => {
   // Dealing with the game_users table
@@ -258,5 +262,6 @@ module.exports = {
   join,
   endGame,
   getGame,
+  start,
   state,
 };

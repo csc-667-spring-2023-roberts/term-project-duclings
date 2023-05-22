@@ -17,6 +17,28 @@ socket.on("gameEnded", () => {
   window.location.href = "/home";
 });
 
+socket.on("startGame", (game_id) => {
+  console.log("redirecting to " + game_id);
+  window.location.href = `/games/${game_id}`;
+});
+
+socket.on(events.CHAT_MESSAGE_RECEIVED, ({ username, message, timestamp }) => {
+  console.log("message received");
+
+  const entry = document.createElement("div");
+
+  const displayName = document.createElement("span");
+  displayName.innerText = username;
+  const displayMessage = document.createElement("span");
+  displayMessage.innerText = message;
+  const displayTimestamp = document.createElement("span");
+  displayTimestamp.innerText = timestamp;
+
+  entry.appendChild(displayName, displayMessage, displayTimestamp);
+
+  messageContainer.append(entry);
+});
+
 gameCreatedHandler(socket);
 joinGameHandler(socket);
 gameUpdatedHandler(socket, game_id);

@@ -13,10 +13,12 @@ router.post("/:id", async (request, response) => {
 
   const { created_at: timestamp } = await Chat.create(game_id, id, message);
 
-  io.in(game_id).emit(events.CHAT_MESSAGE_RECEIVED, {
+  console.log("Message received");
+
+  // io.in(game_id).emit(events.CHAT_MESSAGE_RECEIVED, {
+  io.to(game_id).emit(events.CHAT_MESSAGE_RECEIVED, {
     // This gets chat to show up but not how we want to do sockets since we want to target specific game rooms only
     // io.emit(events.CHAT_MESSAGE_RECEIVED, {
-
     message,
     username,
     timestamp,

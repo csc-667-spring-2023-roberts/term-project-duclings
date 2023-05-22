@@ -33,7 +33,7 @@
             <%- include('partials/chat.ejs') %>
           </div>
           <div class="game-options-div">
-            <form action="/api/games/endGame" method="POST">
+            <form action="/api/games/<%= id %>/endGame" method="POST">
               <button type="submit" class="ms-btn ms-action" value="End Game">End Game</button>
             </form>
           </div>

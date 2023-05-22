@@ -62,9 +62,6 @@ router.get("/create", async (request, response) => {
   }
 });
 
-// Make a move in a game (tic-tac-toe example)
-// ...
-
 // Join a game
 router.get("/:id/join", async (request, response) => {
   const { id: game_id } = request.params;
@@ -82,7 +79,6 @@ router.get("/:id/join", async (request, response) => {
       "the username being sent to lobby websocket is " + username.username
     );
     //io.emit(GAME_JOINED,(username.username));
-    // io.sockets.in(`${game_id}`).emit(GAME_JOINED, username.username);
     io.in(game_id).emit(GAME_JOINED, username.username); // not working
 
     response.redirect(`/lobby/${game_id}`);
@@ -93,10 +89,28 @@ router.get("/:id/join", async (request, response) => {
   }
 });
 
-// End a game
-router.post("/endGame", async (request, response) => {
+// Start a game
+router.post("/:id/startGame", async (request, response) => {
   const { id: user_id } = request.session.user;
-  const game_id = await Games.getGame(user_id);
+  const { id: game_id } = request.params;
+
+  const io = request.app.get("io");
+  try {
+    await Games.start(game_id, user_id);
+    io.in(game_id).emit("startGame", game_id);
+
+    response.redirect(`/games/${game_id}`);
+  } catch (error) {
+    console.log({ error });
+
+    response.redirect("/home");
+  }
+});
+
+// End a game
+router.post("/:id/endGame", async (request, response) => {
+  const { id: user_id } = request.session.user;
+  const { id: game_id } = request.params;
 
   const io = request.app.get("io");
 
@@ -104,7 +118,7 @@ router.post("/endGame", async (request, response) => {
     await Games.endGame(game_id, user_id);
 
     console.log("game_id to be ended: ", game_id);
-    io.in(game_id).emit("gameEnded");
+    io.to(game_id).emit("gameEnded");
     //io.emit("gameEnded");
 
     response.redirect(`/home`);

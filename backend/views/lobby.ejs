@@ -20,14 +20,14 @@
           <% } %>
       </ol>
     </div>
-    <div class = "chat">
+    <div class="chat">
       <%- include('partials/chat.ejs') %>
-      </div>
+    </div>
     <div class="game-options-div">
-      <button onclick="window.location.href='/games/<%= id %>'">Start Game</button>
-      <!-- <form action="/games/<%=id %>">
-                <button type="submit" class="ms-btn ms-action" value="Start Game">Start Game</button>
-            </form> -->
+      <!-- <button onclick="window.location.href='/games/<%= id %>'">Start Game</button> -->
+      <form action="/api/games/<%= id %>/startGame" method="POST">
+        <button type="submit" class="ms-btn ms-action" value="Start Game">Start Game</button>
+      </form>
     </div>
     <template id="player-item">
       <div>
