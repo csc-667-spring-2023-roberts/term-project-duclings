@@ -26,6 +26,7 @@ p,
 label,
 a {
   font-family: var(--body-font);
+  margin: 0;
 }
 
 .nav {

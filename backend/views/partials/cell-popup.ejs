@@ -1,13 +1,71 @@
-<dialog id=card-popup-<%= id %>>
-    <div class="card">
-        <div class="color-block">
-            <%= id %>
+<dialog class="card-dialog" id=card-popup-<%= id %>>
+    <%= id %>
+    <div class="card-dialog-container">
+        <div class="card property">
+            <div class="card-content">
+                <div class="color-block">
+                    <h1 class="property-name">
+                        Lorem Ipsum St.
+                    </h1>
+                </div>
+                <div class="card-body">
+                    <span class="rent">
+                        <span>With 1 House</span>
+                        <span>$50</span>
+                    </span>
+                    <span class="rent">
+                        <span>With 1 House</span>
+                        <span>$100</span>
+                    </span>
+                    <span class="rent">
+                        <span>With 1 House</span>
+                        <span>$100</span>
+                    </span>
+                    <span class="rent">
+                        <span>With 1 House</span>
+                        <span>$100</span>
+                    </span>
+                    <span class="rent">
+                        <span>With 1 House</span>
+                        <span>$100</span>
+                    </span>
+                </div>
+                <div class="card-bottom">
+                    <span class="rent">
+                        <span>With 1 House</span>
+                        <span>$100</span>
+                    </span>
+                    <span class="rent">
+                        <span>With 1 House</span>
+                        <span>$100</span>
+                    </span>
+                </div>
+            </div>
         </div>
-        <div class="card-body">
-
+        <div class="card chance">
+            <div class="card-content">
+                <div class="card-left">
+                    <img src="/assets/img/question.svg" alt="">
+                </div>
+                <div class="card-right">
+                    <h1>Chance</h1>
+                    <p>Lorem ipsum dolor sit amet consectetur!</p>
+                </div>
+            </div>
         </div>
+        <div class="card chest">
+            <div class="card-content">
+                <div class="card-left">
+                    <img src="/assets/img/chest.svg" alt="">
+                </div>
+                <div class="card-right">
+                    <h1>Community Chest</h1>
+                    <p>Lorem ipsum dolor sit amet consectetur!</p>
+                </div>
+            </div>
+        </div>
+        <button class="close primary-button" onclick="document.getElementById('card-popup-<%= id %>').close();">
+            Close
+        </button>
     </div>
-    <button class="close primary-button" onclick="document.getElementById('card-popup-<%= id %>').close();">
-        Close
-    </button>
 </dialog>

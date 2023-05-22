@@ -1,19 +1,54 @@
 :root {
   --border-color: black;
-  --brown: rgb(152, 67, 1);
+  --brown: rgb(196 141 98);
+  --sky: rgb(139 209 212);
+  --pink: rgb(239 150 197);
+  --orange: rgb(240 150 107);
+  --red: rgb(255 111 97);
+  --yellow: rgb(250 216 98);
+  --green: rgb(121 200 105);
+  --blue: rgb(110 148 204);
   --jail-color: rgb(189, 100, 52);
   --space-background: rgb(246, 233, 198);
   --space-background-hover: rgb(217, 203, 161);
   --center-color: rgb(255, 248, 229);
 
-  --chance-card: #ffa500;
-  --chance-card-hover: rgb(194, 126, 0);
-  --community-chest-card: #00b7ff;
-  --community-chest-card-hover: #1999cc;
+  --chance-card: #efa330;
+  --chance-card-hover: #c68e39;
+  --community-chest-card: #41b7e5;
+  --community-chest-card-hover: #3da0c7;
 }
 
 .brown {
   background-color: var(--brown);
+}
+
+.sky {
+  background-color: var(--sky);
+}
+
+.pink {
+  background-color: var(--pink);
+}
+
+.orange {
+  background-color: var(--orange);
+}
+
+.red {
+  background-color: var(--red);
+}
+
+.yellow {
+  background-color: var(--yellow);
+}
+
+.green {
+  background-color: var(--green);
+}
+
+.blue {
+  background-color: var(--blue);
 }
 
 .board {
@@ -242,11 +277,20 @@
 .top .space .colorblock {
   min-height: 2.5vh;
   width: 100%;
+  padding: 0px 2px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 2px;
 }
 .left .space .colorblock,
 .right .space .colorblock {
   height: 100%;
   min-width: 2.5vh;
+  padding: 2px 0px;
+  display: flex;
+  align-items: center;
+  gap: 2px;
 }
 
 .top .space .colorblock {
@@ -259,10 +303,13 @@
 
 .left .space .colorblock {
   border-left: 1px solid var(--border-color);
+  flex-direction: column;
 }
 
 .right .space .colorblock {
   border-right: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column-reverse;
 }
 
 #go {
@@ -440,4 +487,168 @@
   right: 0;
   transition: all 0.75s;
   z-index: 100;
+}
+
+.house-icon {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M20 20.0001C20 20.5524 19.5523 21.0001 19 21.0001H5C4.44772 21.0001 4 20.5524 4 20.0001V11.0001L1 11.0001L11.3273 1.61162C11.7087 1.26488 12.2913 1.26488 12.6727 1.61162L23 11.0001L20 11.0001V20.0001ZM8 15.0001V17.0001H16V15.0001H8Z' fill='rgba(20,112,47,1)'%3E%3C/path%3E%3C/svg%3E");
+  width: 16px;
+	height: 16px;
+}
+
+.hotel-icon {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M21 19H23V21H1V19H3V4C3 3.44772 3.44772 3 4 3H14C14.5523 3 15 3.44772 15 4V19H17V9H20C20.5523 9 21 9.44772 21 10V19ZM7 11V13H11V11H7ZM7 7V9H11V7H7Z' fill='rgba(140,22,45,1)'%3E%3C/path%3E%3C/svg%3E");
+  width: 16px;
+	height: 16px;
+}
+
+dialog::backdrop {
+	background-color: rgba(0,0,0,0.2);
+	animation: backdrop-fade 0.5s;
+}
+
+.card-dialog {
+	border: none;
+	background-color: transparent;
+}
+
+.card-dialog-container {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+	align-items: center;
+}
+
+.card-dialog .card.property {
+	width: 240px;
+	height: auto;
+	background-color: white;
+	padding: 12px;
+	animation: slide-up 0.5s ease-in-out;
+	box-shadow: 0px 2px 8px 2px rgba(0,0,0,0.2);
+}
+
+.chance-card-content {
+  background-color: var(--chance-card);
+  height: 140px;
+}
+
+.card.property .card-content {
+	border: 1px solid black;
+	padding: 12px;
+	font-family: var(--body-font);
+}
+
+.card.property .card-content .color-block {
+	height: 64px;
+	background-color: var(--accent);
+	color: white;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.card.property .card-content .property-name {
+	margin: 0;
+	font-size: 18px;	
+	text-transform: uppercase;
+}
+
+.card-body, .card-bottom {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding: 12px;
+}
+
+.card-body {
+	border-bottom: 1px solid black;
+}
+
+.card.property .card-content .rent {
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	line-height: 1.5;
+}
+
+.card.chance, .card.chest {
+  width: 360px;
+	height: 180px;
+	padding: 12px;
+	animation: slide-up 0.5s ease-in-out;
+	box-shadow: 0px 2px 8px 2px rgba(0,0,0,0.2);
+}
+
+.card.chance {
+  background-color: var(--chance-card);
+  color: black;
+}
+
+
+.card.chest {
+  background-color: var(--community-chest-card);
+  color: black;
+}
+
+.card.chance .card-content, .card.chest .card-content {
+  height: auto;
+  border: 1px solid black;
+  display: grid;
+  grid-template-columns: 50% 50%;
+  /* flex-direction: row; */
+  align-items: center;
+}
+
+.card-content > div {
+  flex: 1
+}
+
+.card-content img {
+  width: 100%;
+  height: auto;
+}
+
+.card-left {
+  padding: 32px;
+  box-sizing: border-box;
+}
+
+.card-right {
+  padding-right: 32px;
+}
+
+.card-right h1{
+  margin: 0;
+  font-size: 24px;
+  margin-bottom: 16px;
+  font-family: var(--display-font);
+}
+
+.card-right p {
+  line-height: 1.2;
+}
+
+@keyframes backdrop-fade {
+	0%{
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
+}
+
+@keyframes slide-up {
+	0% {
+		opacity: 0;
+		transform: translateY(100px);
+	}
+	50% {
+		opacity: 1;
+		transform: translateY(-20px);
+	}
+	100% {
+		opacity: 1;
+		transform: translateY(0px);
+	}
 }
