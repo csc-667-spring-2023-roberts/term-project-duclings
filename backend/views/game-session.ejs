@@ -63,8 +63,8 @@
     let playerRect = player.getBoundingClientRect();
     let padding = 4;
 
-    if (spaceId == "b-11") {
-      let jailRect = document.getElementById("b-12").getBoundingClientRect();
+    if (spaceId == "11") {
+      let jailRect = document.getElementById("b-41").getBoundingClientRect();
 
       let jvRight = board.getBoundingClientRect().right - space.getBoundingClientRect().right + jailRect.width;
       let jvTop = board.getBoundingClientRect().bottom - space.getBoundingClientRect().top - playerRect.height;
@@ -91,7 +91,6 @@
       player.style.bottom = Math.floor(Math.random() * (cellTop - cellBottom + 1) + cellBottom);
       player.style.right = Math.floor(Math.random() * (cellLeft - cellRight + 1) + cellRight);
     }
-
   }
 </script>
 

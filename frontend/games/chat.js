@@ -12,16 +12,34 @@ export function messageReceivedHandler(socket) {
 
       const entry = document.createElement("div");
 
-      const displayName = document.createElement("span");
-      displayName.innerText = username;
-      const displayMessage = document.createElement("span");
-      displayMessage.innerText = message;
-      const displayTimestamp = document.createElement("span");
-      displayTimestamp.innerText = timestamp;
+      messageContainer.insertAdjacentHTML(
+        "afterbegin",
+        `
+          <div class="message-line">
+            <div class="message">
+              <p class="username">
+                ${username}
+              </p>
+              <p class="body">
+                ${message}
+              </p>
+            </div>
+            <span class="timestamp">
+              ${new Date(timestamp).toLocaleTimeString("en-US")}
+            </span>
+          </div>`
+      );
 
-      entry.appendChild(displayName, displayMessage, displayTimestamp);
+      // const displayName = document.createElement("span");
+      // displayName.innerText = username;
+      // const displayMessage = document.createElement("span");
+      // displayMessage.innerText = message;
+      // const displayTimestamp = document.createElement("span");
+      // displayTimestamp.innerText = timestamp;
 
-      messageContainer.append(entry);
+      // entry.appendChild(displayName, displayMessage, displayTimestamp);
+
+      // messageContainer.append(entry, displayMessage, displayTimestamp);
     }
   );
 }
