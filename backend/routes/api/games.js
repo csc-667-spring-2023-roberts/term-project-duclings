@@ -73,7 +73,9 @@ router.get("/:id/join", async (request, response) => {
     await Games.join(game_id, user_id);
 
     const state = await Games.state(game_id, user_id);
-    io.emit(GAME_UPDATED(game_id), state);
+    console.log("state: ");
+    console.log(state);
+    io.to(game_id).emit(GAME_UPDATED(game_id), state);
 
     const username = await Users.getUsername(user_id);
     console.log(
@@ -100,30 +102,11 @@ router.post("/:id/startGame", async (request, response) => {
     io.to(game_id).emit("startGame", game_id);
     response.redirect(`/games/${game_id}`);
 
-    //await Monopoly.playMonopoly(io, game_id);
+    const res = await request.post(`/games/${game_id}/startTurn`);
   } catch (error) {
     console.log({ error });
 
     response.redirect("/home");
-  }
-});
-
-// Dice roll post request to move player
-router.post("/:id/move", async (request, response) => {
-  const { id: game_id } = request.params;
-  const { id: user_id } = request.session.user;
-  const board_position = Games.getBoardPosition(game_id, user_id); // pre-move position
-  const io = request.app.get("io");
-
-  try {
-    const state = await Games.move(game_id, user_id, board_position);
-    io.emit(GAME_UPDATED(game_id), state);
-
-    response.status(200).send();
-  } catch (error) {
-    console.log({ error });
-
-    response.status(500).send();
   }
 });
 
@@ -144,6 +127,109 @@ router.post("/:id/endGame", async (request, response) => {
     console.log("Game ended");
   } catch (error) {
     console.log({ error });
+  }
+});
+
+// Dice roll click calls post request to move player
+router.post("/:id/startTurn", async (request, response) => {
+  const { id: game_id } = request.params;
+  const { id: user_id } = request.session.user;
+  var board_position = Games.getBoardPosition(game_id, user_id); // pre-move position
+  const io = request.app.get("io");
+
+  /*
+  const diceRoll = 5; // TODO: get both dice rolls from front end
+  console.log("board position from post: " + board_position);
+  board_position = board_position + diceRoll; // new board position
+  */
+  const isPlayerTurn = Games.isPlayerTurn(game_id, user_id);
+  if (isPlayerTurn) {
+    // Display the dice roller option.
+    // Clicking on a dice roll button will call the post request to roll the dice
+    // If in jail, display the jail options (jail out of free or pay $50)
+
+    try {
+      const state = await Games.move(game_id, user_id, diceRoll);
+      io.to(game_id).emit(GAME_UPDATED(game_id), state);
+
+      response.status(200).send();
+    } catch (error) {
+      console.log({ error });
+
+      response.status(500).send();
+    }
+  }
+});
+
+// Buy property
+router.post("/:id/buyProperty", async (request, response) => {
+  const { id: game_id } = request.params;
+  const { id: user_id } = request.session.user;
+  const io = request.app.get("io");
+
+  try {
+    //const state = await Games.buy(game_id, user_id); // TODO
+    io.to(game_id).emit(GAME_UPDATED(game_id), state);
+
+    response.status(200).send();
+  } catch (error) {
+    console.log({ error });
+
+    response.status(500).send();
+  }
+});
+
+// Buy house/hotel
+router.post("/:id/buyHouseHotel", async (request, response) => {
+  const { id: game_id } = request.params;
+  const { id: user_id } = request.session.user;
+  const io = request.app.get("io");
+
+  try {
+    //const state = await Games.buyHouse(game_id, user_id); // TODO
+    io.to(game_id).emit(GAME_UPDATED(game_id), state);
+
+    response.status(200).send();
+  } catch (error) {
+    console.log({ error });
+
+    response.status(500).send();
+  }
+});
+
+// Go to jail
+router.post("/:id/goToJail", async (request, response) => {
+  const { id: game_id } = request.params;
+  const { id: user_id } = request.session.user;
+  const io = request.app.get("io");
+
+  try {
+    //const state = await Games.goToJail(game_id, user_id); // TODO
+    io.to(game_id).emit(GAME_UPDATED(game_id), state);
+
+    response.status(200).send();
+  } catch (error) {
+    console.log({ error });
+
+    response.status(500).send();
+  }
+});
+
+// Leave jail
+router.post("/:id/leaveJail", async (request, response) => {
+  const { id: game_id } = request.params;
+  const { id: user_id } = request.session.user;
+  const io = request.app.get("io");
+
+  try {
+    //const state = await Games.leaveJail(game_id, user_id); // TODO
+    io.to(game_id).emit(GAME_UPDATED(game_id), state);
+
+    response.status(200).send();
+  } catch (error) {
+    console.log({ error });
+
+    response.status(500).send();
   }
 });
 

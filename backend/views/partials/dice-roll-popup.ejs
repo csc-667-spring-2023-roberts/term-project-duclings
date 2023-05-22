@@ -50,6 +50,7 @@
         </div>
         
         <div class="button-container">
+            <form action="/api/games/<%= id %>/move" method="POST">
             <button id="roll-button" class="primary-button" onclick="rollDice();">Roll</button>
 
             <button style="display: none;" id="close-button" class="close primary-button" onclick="document.getElementById('dice-roll-popup').close();">
