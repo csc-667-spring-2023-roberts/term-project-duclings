@@ -243,6 +243,13 @@ const getBoardPosition = async (game_id, user_id) => {
   return await board_position.board_position;
 };
 
+const getCurrentPlayer = async (game_id) => {
+  const CURRENT_PLAYER_SQL = `SELECT user_id FROM game_users WHERE game_id=$1 AND current_player=true`;
+  const current_player = await db.one(CURRENT_PLAYER_SQL, [game_id]);
+  console.log("Current player: " + current_player.user_id);
+  return await current_player.user_id;
+};
+
 const move = async (game_id, user_id, board_position) => {
   await db.none(
     "UPDATE game_users SET board_position=$3 WHERE user_id=$2 AND game_id=$1",

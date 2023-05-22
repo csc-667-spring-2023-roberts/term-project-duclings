@@ -101,6 +101,8 @@ router.post("/:id/startGame", async (request, response) => {
   try {
     io.to(game_id).emit("startGame", game_id);
     response.redirect(`/games/${game_id}`);
+
+    const res = await request.post(`/games/${game_id}/startTurn`);
   } catch (error) {
     console.log({ error });
 
@@ -129,25 +131,33 @@ router.post("/:id/endGame", async (request, response) => {
 });
 
 // Dice roll click calls post request to move player
-router.post("/:id/move", async (request, response) => {
+router.post("/:id/startTurn", async (request, response) => {
   const { id: game_id } = request.params;
   const { id: user_id } = request.session.user;
   var board_position = Games.getBoardPosition(game_id, user_id); // pre-move position
   const io = request.app.get("io");
 
+  /*
   const diceRoll = 5; // TODO: get both dice rolls from front end
   console.log("board position from post: " + board_position);
   board_position = board_position + diceRoll; // new board position
+  */
+  const isPlayerTurn = Games.isPlayerTurn(game_id, user_id);
+  if (isPlayerTurn) {
+    // Display the dice roller option.
+    // Clicking on a dice roll button will call the post request to roll the dice
+    // If in jail, display the jail options (jail out of free or pay $50)
 
-  try {
-    const state = await Games.move(game_id, user_id, diceRoll);
-    io.to(game_id).emit(GAME_UPDATED(game_id), state);
+    try {
+      const state = await Games.move(game_id, user_id, diceRoll);
+      io.to(game_id).emit(GAME_UPDATED(game_id), state);
 
-    response.status(200).send();
-  } catch (error) {
-    console.log({ error });
+      response.status(200).send();
+    } catch (error) {
+      console.log({ error });
 
-    response.status(500).send();
+      response.status(500).send();
+    }
   }
 });
 
