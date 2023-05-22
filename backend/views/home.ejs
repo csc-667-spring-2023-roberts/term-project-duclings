@@ -2,15 +2,39 @@
 
 <head>
   <%- include('partials/head.ejs') %>
+
+  <style>
+    #home-heading {
+      /* padding: 32px 64px; */
+      text-align: center;
+      margin-bottom: 64px;
+    }
+    #games-form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      align-items: center;
+    }
+    #game-list {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    #game-list li{
+      display: block;
+    }
+  </style>
 </head>
 
 <body>
   <%- include('partials/authenticated-nav.ejs') %>
-  <h1>Home Page (Authenticated) - Hi <%= user.username %> (id: <%= user.id %>)</h1>
+  <h1 id="home-heading">Hi, <%= user.username %> (id: <%= user.id %>)</h1>
     <div class="container">
       <div class="row">
         <div class="col-sm">
-          <form method="get" action="/api/games/create">
+          <form id="games-form" method="get" action="/api/games/create">
             <!-- Button elem might cause issues with chat msg submission -->
             <button type="submit" class="primary-button" value="Create Game">Create Game</button>
             <!-- <a href="/api/games/create" id="create-game-link" class="primary-button">Create Game</a> -->

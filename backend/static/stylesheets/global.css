@@ -184,6 +184,10 @@ a {
   animation-delay: 0.7s;
 }
 
+#login-head, #signup-head {
+  margin-bottom: 16px;
+}
+
 .center-container {
   height: auto;
   min-height: 100vh;
@@ -299,10 +303,12 @@ a {
 
 #chat-container {
   max-width: 640px;
+  background-color: var(--background-dark);
 }
 
 #messages {
-  height: 480px;
+  max-height: 320px;
+  min-height: 320px;
   overflow-y: scroll;
   display: flex;
   flex-direction: column-reverse;
@@ -314,6 +320,9 @@ a {
     black 100%
   );
   padding-top: 32px;
+  padding-bottom: 16px;
+  padding-left: 16px;
+  padding-right: 16px;
 }
 
 .message-line {
@@ -323,6 +332,8 @@ a {
   justify-content: space-between;
   margin-block-start: 8px;
   margin-block-end: 8px;
+  animation: pop-message 0.25s;
+  transform-origin: bottom;
 }
 
 .message {
@@ -341,4 +352,15 @@ a {
 .message-line .timestamp {
   margin-left: 16px;
   color: var(--gray);
+}
+
+@keyframes pop-message {
+  0% {
+    opacity: 0;
+    transform: scaleY(0);
+  }
+  100% {
+    opacity: 1;
+    transform: scaleY(1);
+  }
 }

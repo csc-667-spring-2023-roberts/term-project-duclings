@@ -5,6 +5,7 @@ import { gameUpdatedHandler } from "./games/updated";
 import { getGameId } from "./games/get-game-id";
 import { joinGameHandler } from "./games/update-games-list";
 import { messageReceivedHandler } from "./games/chat";
+import { initSpaceDialogs } from "./games/init-board";
 
 const game_id = getGameId(document.location.pathname);
 
@@ -46,3 +47,4 @@ gameCreatedHandler(socket);
 joinGameHandler(socket);
 gameUpdatedHandler(socket, game_id);
 messageReceivedHandler(socket);
+initSpaceDialogs();
