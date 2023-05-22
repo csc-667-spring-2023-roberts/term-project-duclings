@@ -73,7 +73,9 @@ router.get("/:id/join", async (request, response) => {
     await Games.join(game_id, user_id);
 
     const state = await Games.state(game_id, user_id);
-    io.emit(GAME_UPDATED(game_id), state);
+    console.log("state: ");
+    console.log(state);
+    io.to(game_id).emit(GAME_UPDATED(game_id), state);
 
     const username = await Users.getUsername(user_id);
     console.log(
@@ -108,16 +110,20 @@ router.post("/:id/startGame", async (request, response) => {
   }
 });
 
-// Dice roll post request to move player
+// Dice roll click calls post request to move player
 router.post("/:id/move", async (request, response) => {
   const { id: game_id } = request.params;
   const { id: user_id } = request.session.user;
-  const board_position = Games.getBoardPosition(game_id, user_id); // pre-move position
+  var board_position = Games.getBoardPosition(game_id, user_id); // pre-move position
   const io = request.app.get("io");
 
+  const diceRoll = 5; // TODO: get both dice rolls from front end
+  console.log("board position from post: " + board_position);
+  board_position = board_position + diceRoll; // new board position
+
   try {
-    const state = await Games.move(game_id, user_id, board_position);
-    io.emit(GAME_UPDATED(game_id), state);
+    const state = await Games.move(game_id, user_id, diceRoll);
+    io.to(game_id).emit(GAME_UPDATED(game_id), state);
 
     response.status(200).send();
   } catch (error) {

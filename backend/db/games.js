@@ -243,7 +243,8 @@ const start = async (game_id, user_id) => {
 const getBoardPosition = async (game_id, user_id) => {
   const BOARD_POSITION_SQL = `SELECT board_position FROM game_users WHERE game_id=$1 AND user_id=$2`;
   const board_position = await db.one(BOARD_POSITION_SQL, [game_id, user_id]);
-  return board_position.board_position;
+  console.log("Board position: " + board_position.board_position);
+  return await board_position.board_position;
 };
 
 const move = async (game_id, user_id, board_position) => {
@@ -262,16 +263,119 @@ const state = async (game_id, user_id) => {
     [game_id]
   );
 
+  const inventories = await db.many(
+    `
+  SELECT DISTINCT inventory.*, game_users.play_order
+  FROM inventory
+  JOIN game_users ON inventory.user_id = game_users.user_id
+  WHERE inventory.game_id = $1 AND game_users.game_id = $1
+  ORDER BY game_users.play_order
+  `,
+    [game_id]
+  );
+
   return {
     game_id,
     users,
+    inventories,
     user_id,
   };
 };
 
-const updateInventory = async (game_id, user_id) => {
-  const UPDATE_BALANCE_SQL = `UPDATE inventory SET balance=balance+200 WHERE game_id=$1 AND user_id=$2`;
-  await db.none(UPDATE_BALANCE_SQL, [game_id, user_id]);
+// Updates the balance $$$ of the user in the inventory table
+const updateBalance = async (amount, game_id, user_id) => {
+  const UPDATE_BALANCE_SQL = `UPDATE inventory SET balance=$1 WHERE game_id=$2 AND user_id=$3`;
+
+  await db.none(UPDATE_BALANCE_SQL, [amount, game_id, user_id]);
+};
+
+// Updates (adds to) count of property type in property_inventory
+const addToPropertyInventory = async (game_id, user_id, property_id) => {
+  const ADD_TO_PROPERTY_INV_SQL = `UPDATE property_inventory SET $1=$1+1 WHERE game_id=$2 AND user_id=$3`;
+  await db.none(ADD_TO_PROPERTY_INV_SQL, [
+    property_type_count,
+    game_id,
+    user_id,
+  ]);
+};
+
+// Make player owner of property (expecting owner user_id, game_id, user_id)
+const setPropertyOwner = async (game_id, user_id, property_id) => {
+  const SET_OWNER_BOARD_SPACE_PROPERTY_INFO_SQL = `UPDATE board_spaces SET property_owner=$1 AND property_owned=true WHERE game_id=$2 AND user_id=$3`;
+  await db.none(SET_OWNER_BOARD_SPACE_PROPERTY_INFO_SQL, [
+    user_id,
+    game_id,
+    user_id,
+  ]);
+};
+
+// Updates (removes from) count of property type in property_inventory
+const removeFromPropertyInventory = async (game_id, user_id, property_id) => {
+  // Remove from property_inventory
+  const REMOVE_FROM_PROPERTY_INV_SQL = `UPDATE property_inventory SET $1=$1-1 WHERE game_id=$2 AND user_id=$3`;
+  await db.none(REMOVE_FROM_PROPERTY_INV_SQL, [
+    property_type_count,
+    game_id,
+    user_id,
+  ]);
+};
+
+// Remove owner from property (expecting owner user_id, game_id, user_id)
+const removePropertyOwner = async (game_id, user_id, property_id) => {
+  const REMOVE_OWNER_BOARD_SPACE_PROPERTY_INFO_SQL = `UPDATE board_spaces SET property_owner=$1 AND property_owned=true WHERE game_id=$2 AND user_id=$3`;
+  await db.none(REMOVE_OWNER_BOARD_SPACE_PROPERTY_INFO_SQL, [
+    user_id,
+    game_id,
+    user_id,
+  ]);
+};
+
+// When a player rolls doubles
+const getSnakeEyes = async (game_id, user_id) => {
+  const GET_SNAKE_EYES_SQL = `SELECT dice_doubles_count FROM game_users WHERE game_id=$1 AND user_id=$2`;
+  const snake_eyes = await db.one(GET_SNAKE_EYES_SQL, [game_id, user_id]);
+  return snake_eyes.dice_doubles_count;
+};
+
+// When a player rolls doubles
+const updateSnakeEyes = async (game_id, user_id) => {
+  const UPDATE_SNAKE_EYES_SQL = `UPDATE game_users SET dice_doubles_count=dice_doubles_count+1 WHERE game_id=$1 AND user_id=$2`;
+  await db.none(UPDATE_SNAKE_EYES_SQL, [game_id, user_id]);
+};
+
+const countJailFreeCards = async (game_id, user_id) => {
+  const JAIL_FREE_CARD_SQL = `SELECT jail_free_card FROM inventory WHERE game_id=$1 AND user_id=$2`;
+  const jail_free_card_count = await db.one(JAIL_FREE_CARD_SQL, [
+    game_id,
+    user_id,
+  ]);
+  return jail_free_card_count;
+};
+
+const incrementTurnNumber = async (game_id, user_id) => {
+  const INCREMENT_TURN_NUMBER_SQL = `UPDATE game_users SET turn_number=turn_number+1 WHERE game_id=$1 AND user_id=$2`;
+  await db.none(INCREMENT_TURN_NUMBER_SQL, [game_id, user_id]);
+};
+
+const incrementJailTurns = async (game_id, user_id) => {
+  const INCREMENT_JAIL_TURNS_SQL = `UPDATE game_users SET jail_turns=jail_turns+1 WHERE game_id=$1 AND user_id=$2`;
+  await db.none(INCREMENT_JAIL_TURNS_SQL, [game_id, user_id]);
+};
+
+const setMortgaged = async (game_id, user_id, property_id) => {
+  const SET_MORTGAGED_SQL = `UPDATE board_spaces SET mortgaged=true WHERE game_id=$1 AND user_id=$2 AND property_id=$3`;
+  await db.none(SET_MORTGAGED_SQL, [game_id, user_id, property_id]);
+};
+
+const setUnmortaged = async (game_id, user_id, property_id) => {
+  const SET_UNMORTGAGED_SQL = `UPDATE board_spaces SET mortgaged=false WHERE game_id=$1 AND user_id=$2 AND property_id=$3`;
+  await db.none(SET_UNMORTGAGED_SQL, [game_id, user_id, property_id]);
+};
+
+// When a player loses
+const updateAliveStatus = async (game_id, user_id) => {
+  const UPDATE_ALIVE_STATUS_SQL = `UPDATE game_users SET alive=false WHERE game_id=$1 AND user_id=$2`;
+  await db.none(UPDATE_ALIVE_STATUS_SQL, [game_id, user_id]);
 };
 
 module.exports = {
@@ -280,8 +384,10 @@ module.exports = {
   listPlayers,
   join,
   endGame,
+  move,
   getGame,
   start,
   state,
   getBoardPosition,
+  updateBalance,
 };
