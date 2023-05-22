@@ -14,7 +14,6 @@ const initSockets = (app, sessionMiddleware) => {
 
     _socket.on("join", (game_id) => {
       console.log(_socket.id + "is Joining room: " + game_id);
-      console.log(game_id);
       _socket.join(game_id);
       console.log("all socket rooms connected:");
       console.log(_socket.adapter.rooms);

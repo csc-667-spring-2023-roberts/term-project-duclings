@@ -22,6 +22,8 @@ socket.on("startGame", (game_id) => {
   window.location.href = `/games/${game_id}`;
 });
 
+/*
+// the below code is in messageReceivedHandler
 socket.on(events.CHAT_MESSAGE_RECEIVED, ({ username, message, timestamp }) => {
   console.log("message received");
 
@@ -38,6 +40,7 @@ socket.on(events.CHAT_MESSAGE_RECEIVED, ({ username, message, timestamp }) => {
 
   messageContainer.append(entry);
 });
+*/
 
 gameCreatedHandler(socket);
 joinGameHandler(socket);

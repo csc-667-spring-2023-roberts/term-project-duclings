@@ -11,6 +11,6 @@ export function getGameId(location) {
   if (gameId === "lobby") {
     return 0;
   } else {
-    return parseInt(gameId);
+    return gameId.trim();
   }
 }

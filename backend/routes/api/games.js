@@ -79,7 +79,7 @@ router.get("/:id/join", async (request, response) => {
       "the username being sent to lobby websocket is " + username.username
     );
     //io.emit(GAME_JOINED,(username.username));
-    io.in(game_id).emit(GAME_JOINED, username.username); // not working
+    io.to(game_id).emit(GAME_JOINED, username.username); // not working
 
     response.redirect(`/lobby/${game_id}`);
   } catch (error) {
@@ -97,7 +97,7 @@ router.post("/:id/startGame", async (request, response) => {
   const io = request.app.get("io");
   try {
     await Games.start(game_id, user_id);
-    io.in(game_id).emit("startGame", game_id);
+    io.to(game_id).emit("startGame", game_id);
 
     response.redirect(`/games/${game_id}`);
   } catch (error) {
@@ -119,7 +119,6 @@ router.post("/:id/endGame", async (request, response) => {
 
     console.log("game_id to be ended: ", game_id);
     io.to(game_id).emit("gameEnded");
-    //io.emit("gameEnded");
 
     response.redirect(`/home`);
     console.log("Game ended");
