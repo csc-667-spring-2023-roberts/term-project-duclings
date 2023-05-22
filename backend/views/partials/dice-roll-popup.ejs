@@ -1,0 +1,91 @@
+<dialog id="dice-roll-popup">
+    <div class="dice-popup-container">
+        <div class="dice-grid">
+            <div id="dice1" class="dice">
+                <div id="d1-1" class="side">
+                    <img src="/assets/img/d1.svg" alt="">
+                </div>
+                <div id="d1-2" class="side">
+                    <img src="/assets/img/d2.svg" alt="">
+                </div>
+                <div id="d1-3" class="side">
+                    <img src="/assets/img/d3.svg" alt="">
+                </div>
+                <div id="d1-4" class="side">
+                    <img src="/assets/img/d4.svg" alt="">
+                </div>
+                <div id="d1-5" class="side">
+                    <img src="/assets/img/d5.svg" alt="">
+                </div>
+                <div id="d1-6" class="side">
+                    <img src="/assets/img/d6.svg" alt="">
+                </div>
+            </div>
+            <div id="dice2" class="dice">
+                <div id="d2-1" class="side">
+                    <img src="/assets/img/d1.svg" alt="">
+                </div>
+                <div id="d2-2" class="side">
+                    <img src="/assets/img/d2.svg" alt="">
+                </div>
+                <div id="d2-3" class="side">
+                    <img src="/assets/img/d3.svg" alt="">
+                </div>
+                <div id="d2-4" class="side">
+                    <img src="/assets/img/d4.svg" alt="">
+                </div>
+                <div id="d2-5" class="side">
+                    <img src="/assets/img/d5.svg" alt="">
+                </div>
+                <div id="d2-6" class="side">
+                    <img src="/assets/img/d6.svg" alt="">
+                </div>
+            </div>
+            <div id="dice1-number" class="dice-number">
+                ?
+            </div>
+            <div id="dice2-number" class="dice-number">
+                ?
+            </div>
+        </div>
+        
+        <div class="button-container">
+            <button id="roll-button" class="primary-button" onclick="rollDice();">Roll</button>
+
+            <button style="display: none;" id="close-button" class="close primary-button" onclick="document.getElementById('dice-roll-popup').close();">
+                Close
+            </button>
+        </div>
+    </div>
+</dialog>
+
+<script>
+let thisElem = document.getElementById("dice-roll-popup");
+let rollButton = document.getElementById("roll-button");
+let closeButton = document.getElementById("close-button");
+let dice1 = document.getElementById("dice1");
+let dice1text = document.getElementById("dice1-number");
+let dice2 = document.getElementById("dice2");
+let dice2text = document.getElementById("dice2-number");
+
+function rollDice() {
+    let d1 = Math.floor((Math.random() * 6) + 1);
+    let d2 = Math.floor((Math.random() * 6) + 1);
+    for (let i = 1; i <= 6; i++) {
+        dice1.classList.remove(`show-${i}`)
+        dice2.classList.remove(`show-${i}`)
+    }
+    
+    dice1.classList.add(`show-${d1}`);
+    dice1text.innerHTML = d1;
+
+    dice2.classList.add(`show-${d2}`);
+    dice2text.innerHTML = d2;
+
+    rollButton.disabled = true;
+    rollButton.style.display = "none";
+    closeButton.style.display = "block";
+
+    setTimeout(() => {thisElem.close();}, 2000);
+}
+</script>

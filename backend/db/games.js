@@ -240,6 +240,20 @@ const start = async (game_id, user_id) => {
   console.log("Starting game...");
 };
 
+const getBoardPosition = async (game_id, user_id) => {
+  const BOARD_POSITION_SQL = `SELECT board_position FROM game_users WHERE game_id=$1 AND user_id=$2`;
+  const board_position = await db.one(BOARD_POSITION_SQL, [game_id, user_id]);
+  return board_position.board_position;
+};
+
+const move = async (game_id, user_id, board_position) => {
+  await db.none(
+    "UPDATE game_users SET board_position=$3 WHERE user_id=$2 AND game_id=$1",
+    [user_id, game_id, board_position]
+  );
+  return await state(game_id, user_id);
+};
+
 // Create and return the game state
 const state = async (game_id, user_id) => {
   // Dealing with the game_users table
@@ -255,6 +269,11 @@ const state = async (game_id, user_id) => {
   };
 };
 
+const updateInventory = async (game_id, user_id) => {
+  const UPDATE_BALANCE_SQL = `UPDATE inventory SET balance=balance+200 WHERE game_id=$1 AND user_id=$2`;
+  await db.none(UPDATE_BALANCE_SQL, [game_id, user_id]);
+};
+
 module.exports = {
   create,
   listGames,
@@ -264,4 +283,5 @@ module.exports = {
   getGame,
   start,
   state,
+  getBoardPosition,
 };

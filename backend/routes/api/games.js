@@ -1,6 +1,7 @@
 const express = require("express");
 const Games = require("../../db/games.js");
 const Users = require("../../db/users.js");
+
 const {
   GAME_CREATED,
   GAME_UPDATED,
@@ -96,14 +97,33 @@ router.post("/:id/startGame", async (request, response) => {
 
   const io = request.app.get("io");
   try {
-    await Games.start(game_id, user_id);
     io.to(game_id).emit("startGame", game_id);
-
     response.redirect(`/games/${game_id}`);
+
+    //await Monopoly.playMonopoly(io, game_id);
   } catch (error) {
     console.log({ error });
 
     response.redirect("/home");
+  }
+});
+
+// Dice roll post request to move player
+router.post("/:id/move", async (request, response) => {
+  const { id: game_id } = request.params;
+  const { id: user_id } = request.session.user;
+  const board_position = Games.getBoardPosition(game_id, user_id); // pre-move position
+  const io = request.app.get("io");
+
+  try {
+    const state = await Games.move(game_id, user_id, board_position);
+    io.emit(GAME_UPDATED(game_id), state);
+
+    response.status(200).send();
+  } catch (error) {
+    console.log({ error });
+
+    response.status(500).send();
   }
 });
 
