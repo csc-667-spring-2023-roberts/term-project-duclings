@@ -101,12 +101,30 @@ router.post("/:id/startGame", async (request, response) => {
   try {
     io.to(game_id).emit("startGame", game_id);
     response.redirect(`/games/${game_id}`);
-
-    //await Monopoly.playMonopoly(io, game_id);
   } catch (error) {
     console.log({ error });
 
     response.redirect("/home");
+  }
+});
+
+// End a game
+router.post("/:id/endGame", async (request, response) => {
+  const { id: user_id } = request.session.user;
+  const { id: game_id } = request.params;
+
+  const io = request.app.get("io");
+
+  try {
+    await Games.endGame(game_id, user_id);
+
+    console.log("game_id to be ended: ", game_id);
+    io.to(game_id).emit("gameEnded");
+
+    response.redirect(`/home`);
+    console.log("Game ended");
+  } catch (error) {
+    console.log({ error });
   }
 });
 
@@ -133,23 +151,75 @@ router.post("/:id/move", async (request, response) => {
   }
 });
 
-// End a game
-router.post("/:id/endGame", async (request, response) => {
-  const { id: user_id } = request.session.user;
+// Buy property
+router.post("/:id/buyProperty", async (request, response) => {
   const { id: game_id } = request.params;
-
+  const { id: user_id } = request.session.user;
   const io = request.app.get("io");
 
   try {
-    await Games.endGame(game_id, user_id);
+    //const state = await Games.buy(game_id, user_id); // TODO
+    io.to(game_id).emit(GAME_UPDATED(game_id), state);
 
-    console.log("game_id to be ended: ", game_id);
-    io.to(game_id).emit("gameEnded");
-
-    response.redirect(`/home`);
-    console.log("Game ended");
+    response.status(200).send();
   } catch (error) {
     console.log({ error });
+
+    response.status(500).send();
+  }
+});
+
+// Buy house/hotel
+router.post("/:id/buyHouseHotel", async (request, response) => {
+  const { id: game_id } = request.params;
+  const { id: user_id } = request.session.user;
+  const io = request.app.get("io");
+
+  try {
+    //const state = await Games.buyHouse(game_id, user_id); // TODO
+    io.to(game_id).emit(GAME_UPDATED(game_id), state);
+
+    response.status(200).send();
+  } catch (error) {
+    console.log({ error });
+
+    response.status(500).send();
+  }
+});
+
+// Go to jail
+router.post("/:id/goToJail", async (request, response) => {
+  const { id: game_id } = request.params;
+  const { id: user_id } = request.session.user;
+  const io = request.app.get("io");
+
+  try {
+    //const state = await Games.goToJail(game_id, user_id); // TODO
+    io.to(game_id).emit(GAME_UPDATED(game_id), state);
+
+    response.status(200).send();
+  } catch (error) {
+    console.log({ error });
+
+    response.status(500).send();
+  }
+});
+
+// Leave jail
+router.post("/:id/leaveJail", async (request, response) => {
+  const { id: game_id } = request.params;
+  const { id: user_id } = request.session.user;
+  const io = request.app.get("io");
+
+  try {
+    //const state = await Games.leaveJail(game_id, user_id); // TODO
+    io.to(game_id).emit(GAME_UPDATED(game_id), state);
+
+    response.status(200).send();
+  } catch (error) {
+    console.log({ error });
+
+    response.status(500).send();
   }
 });
 
