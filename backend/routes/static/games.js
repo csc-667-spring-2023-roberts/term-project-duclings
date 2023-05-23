@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Chat = require("../../db/chat");
+const Games = require("../../db/games.js");
 
 router.get("/:id", async (request, response) => {
   const { id: game_id } = request.params;
@@ -8,9 +9,13 @@ router.get("/:id", async (request, response) => {
 
   try {
     const chat = await Chat.getMessages(game_id);
+    const current_players = await Games.listPlayers(game_id);
+    console.log("Current Players", current_players);
+
     response.render("game-session", {
       id: game_id,
       title: "Monopoly | Game " + game_id,
+      playersList: current_players,
       messages: chat,
     });
   } catch (error) {
@@ -18,6 +23,7 @@ router.get("/:id", async (request, response) => {
     response.render("game-session", {
       id: game_id,
       title: "Monopoly | Game " + game_id,
+      playersList: [],
       messages: [],
     });
   }

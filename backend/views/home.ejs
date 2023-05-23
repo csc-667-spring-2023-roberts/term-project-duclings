@@ -30,7 +30,9 @@
 
 <body>
   <%- include('partials/authenticated-nav.ejs') %>
-  <h1 id="home-heading">Hi, <%= user.username %> (id: <%= user.id %>)</h1>
+  <h1 id="home-heading">Welcome to Monopoly, <%= user.username %>!</h1>
+  <!-- Debugging purposes -->
+  <h3  id="home-heading" style="text-align: center; margin-top: -4%;">(user_id: <%= user.id %>)</h3>
     <div class="container">
       <div class="row">
         <div class="col-sm">

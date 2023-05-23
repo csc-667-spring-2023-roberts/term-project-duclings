@@ -75,13 +75,12 @@ router.get("/:id/join", async (request, response) => {
     const state = await Games.state(game_id, user_id);
     console.log("state: ");
     console.log(state);
-    io.to(game_id).emit(GAME_UPDATED(game_id), state);
+    //io.to(game_id).emit(GAME_UPDATED(game_id), state);
 
     const username = await Users.getUsername(user_id);
     console.log(
       "the username being sent to lobby websocket is " + username.username
     );
-    //io.emit(GAME_JOINED,(username.username));
     io.to(game_id).emit(GAME_JOINED, username.username); // not working
 
     response.redirect(`/lobby/${game_id}`);
@@ -99,10 +98,8 @@ router.post("/:id/startGame", async (request, response) => {
 
   const io = request.app.get("io");
   try {
-    io.to(game_id).emit("startGame", game_id);
+    await io.to(game_id).emit("startGame", game_id);
     response.redirect(`/games/${game_id}`);
-
-    const res = await request.post(`/games/${game_id}/startTurn`);
   } catch (error) {
     console.log({ error });
 
@@ -134,31 +131,30 @@ router.post("/:id/endGame", async (request, response) => {
 router.post("/:id/startTurn", async (request, response) => {
   const { id: game_id } = request.params;
   const { id: user_id } = request.session.user;
-  var board_position = Games.getBoardPosition(game_id, user_id); // pre-move position
   const io = request.app.get("io");
 
-  /*
-  const diceRoll = 5; // TODO: get both dice rolls from front end
-  console.log("board position from post: " + board_position);
-  board_position = board_position + diceRoll; // new board position
-  */
-  const isPlayerTurn = Games.isPlayerTurn(game_id, user_id);
-  if (isPlayerTurn) {
-    // Display the dice roller option.
-    // Clicking on a dice roll button will call the post request to roll the dice
-    // If in jail, display the jail options (jail out of free or pay $50)
+  let board_position = await Games.getBoardPosition(game_id, user_id); // pre-move position
 
-    try {
-      const state = await Games.move(game_id, user_id, diceRoll);
-      io.to(game_id).emit(GAME_UPDATED(game_id), state);
+  console.log("start turn endpoint is received");
 
-      response.status(200).send();
-    } catch (error) {
-      console.log({ error });
+  // const isPlayerTurn = Games.isPlayerTurn(game_id, user_id);
+  // if (isPlayerTurn) {
 
-      response.status(500).send();
-    }
+  try {
+    await Games.move(game_id, user_id, board_position);
+    const state = await Games.state(game_id, user_id);
+    response.redirect(`/games/${game_id}`);
+
+    io.to(game_id).emit(GAME_UPDATED, state);
+
+    response.status(200).send();
+  } catch (error) {
+    console.log({ error });
+
+    response.status(500).send();
   }
+  console.log("reached end of start turn passing if statements (i.e. error)");
+  response.status(200).send();
 });
 
 // Buy property

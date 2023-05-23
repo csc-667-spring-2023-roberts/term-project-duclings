@@ -188,6 +188,14 @@ const PLAYERS_LIST_SQL = `SELECT DISTINCT ON (user_id) user_id, play_order FROM 
 const listPlayers = async (game_id) => db.any(PLAYERS_LIST_SQL, [game_id]);
 
 const join = async (game_id, user_id) => {
+  // Check if user is already in the game they're trying to join
+  // const CHECK_IF_IN_CURRENT_GAME_SQL = "SELECT * FROM game_users WHERE user_id=$1 AND game_id=$2";
+  // const rowCount = await db.one(CHECK_IF_IN_GAME_SQL, [user_id, game_id]);
+  // if (rowCount) {
+  //   throw new Error("Error thrown: Player is already in a game");
+  //   console.log("Error thrown: Player is already in a game");
+  // }
+
   // User is added to game (they are added to the game_users table with the corresponding game_id)
 
   // Read player_count from game from games table with game_id
@@ -221,8 +229,6 @@ const join = async (game_id, user_id) => {
   ]);
 };
 
-//const startGame = async (game_id, user_id) => {
-
 const endGame = async (game_id, user_id) => {
   const END_GAME_SQL = `DELETE FROM games WHERE id=$1`;
   const DELETE_GAME_USERS_SQL = `DELETE FROM game_users WHERE game_id=$1`;
@@ -251,18 +257,20 @@ const getCurrentPlayer = async (game_id) => {
 };
 
 const move = async (game_id, user_id, board_position) => {
-  await db.none(
-    "UPDATE game_users SET board_position=$3 WHERE user_id=$2 AND game_id=$1",
-    [user_id, game_id, board_position]
-  );
-  return await state(game_id, user_id);
+  const MOVE_POSITION_SQL = `UPDATE game_users SET board_position=$3 WHERE user_id=$2 AND game_id=$1`;
+  await db.none(MOVE_POSITION_SQL, [game_id, user_id, board_position]);
 };
 
 // Create and return the game state
 const state = async (game_id, user_id) => {
   // Dealing with the game_users table
   const users = await db.many(
-    "SELECT users.username, users.id AS user_id FROM users, game_users WHERE users.id=game_users.user_id AND game_users.game_id=$1 ORDER BY game_users.play_order",
+    `
+   SELECT game_users.*
+   FROM game_users
+   WHERE game_users.game_id = $1
+   ORDER BY game_users.play_order
+   `,
     [game_id]
   );
 
@@ -285,10 +293,22 @@ const state = async (game_id, user_id) => {
   };
 };
 
-// Updates the balance $$$ of the user in the inventory table
-const updateBalance = async (amount, game_id, user_id) => {
-  const UPDATE_BALANCE_SQL = `UPDATE inventory SET balance=$1 WHERE game_id=$2 AND user_id=$3`;
-  await db.none(UPDATE_BALANCE_SQL, [amount, game_id, user_id]);
+const isPlayerTurn = async (game_id, user_id) => {
+  const GET_CURRENT_PLAYER = `SELECT user_id FROM game_users WHERE game_id=$1 AND current_player=true`;
+  const current_player = await db.one(GET_CURRENT_PLAYER, [game_id]);
+  return current_player.user_id === user_id;
+};
+
+// Current_player set true for user_id when their turn starts
+const setCurrentPlayer = async (game_id, user_id) => {
+  const SET_CURRENT_PLAYER_SQL = `UPDATE game_users SET current_player=true WHERE game_id=$1 AND user_id=$2`;
+  await db.none(SET_CURRENT_PLAYER_SQL, [game_id, user_id]);
+};
+
+// Current_player set false for user_id when their turn ends
+const setNextPlayer = async (game_id, user_id) => {
+  const SET_NEXT_PLAYER_SQL = `UPDATE game_users SET current_player=false WHERE game_id=$1 AND user_id=$2`;
+  await db.none(SET_NEXT_PLAYER_SQL, [game_id, user_id]);
 };
 
 const incrementTurnNumber = async (game_id, user_id) => {
@@ -296,11 +316,22 @@ const incrementTurnNumber = async (game_id, user_id) => {
   await db.none(INCREMENT_TURN_NUMBER_SQL, [game_id, user_id]);
 };
 
+// Updates the balance $$$ of the user in the inventory table
+const updateBalance = async (amount, game_id, user_id) => {
+  const UPDATE_BALANCE_SQL = `UPDATE inventory SET balance=$1 WHERE game_id=$2 AND user_id=$3`;
+  await db.none(UPDATE_BALANCE_SQL, [amount, game_id, user_id]);
+};
+
 // This query returns the user_id from the game_users table in the current game_id where current_player is true
 const checkCurrentPlayer = async (game_id) => {
   const CHECK_CURRENT_PLAYER_SQL = `SELECT user_id FROM game_users WHERE game_id=$1 AND current_player=true`;
   const currentPlayer = await db.one(CHECK_CURRENT_PLAYER_SQL, [game_id]);
   return currentPlayer.user_id;
+};
+
+const updateBoardPosition = async (game_id, user_id, board_position) => {
+  const UPDATE_BOARD_POSITION_SQL = `UPDATE game_users SET board_position=$3 WHERE game_id=$1 AND user_id=$2`;
+  await db.none(UPDATE_BOARD_POSITION_SQL, [game_id, user_id, board_position]);
 };
 
 const checkAliveStatus = async (game_id, user_id) => {
@@ -360,27 +391,21 @@ const getJailFreeCard = async (game_id, user_id) => {
   ]);
 };
 
-// When a player loses
-const updateAliveStatus = async (game_id, user_id) => {
-  const UPDATE_ALIVE_STATUS_SQL = `UPDATE game_users SET alive=false WHERE game_id=$1 AND user_id=$2`;
-  await db.none(UPDATE_ALIVE_STATUS_SQL, [game_id, user_id]);
+// TODO: Adjust query to return property_cost from property_info table of the current game_id being played
+const getPropertyCost = async (board_position) => {
+  const GET_PROPERTY_COST_SQL = `SELECT property_cost FROM property_info WHERE board_position=$1`;
+  const property_cost = await db.one(GET_PROPERTY_COST_SQL, [board_position]);
+  return property_cost.cost;
 };
+
+// TODO: Make a query to calculate the property_cost based on how much of each color owned
+const calculatePropertyCost = async (board_position) => {};
 
 // Updates (adds to) count of property type in property_inventory
 const addToPropertyInventory = async (game_id, user_id, property_id) => {
   const ADD_TO_PROPERTY_INV_SQL = `UPDATE property_inventory SET $1=$1+1 WHERE game_id=$2 AND user_id=$3`;
   await db.none(ADD_TO_PROPERTY_INV_SQL, [
     property_type_count,
-    game_id,
-    user_id,
-  ]);
-};
-
-// Make player owner of property (expecting owner user_id, game_id, user_id)
-const setPropertyOwner = async (game_id, user_id, property_id) => {
-  const SET_OWNER_BOARD_SPACE_PROPERTY_INFO_SQL = `UPDATE board_spaces SET property_owner=$1 AND property_owned=true WHERE game_id=$2 AND user_id=$3`;
-  await db.none(SET_OWNER_BOARD_SPACE_PROPERTY_INFO_SQL, [
-    user_id,
     game_id,
     user_id,
   ]);
@@ -397,6 +422,16 @@ const removeFromPropertyInventory = async (game_id, user_id, property_id) => {
   ]);
 };
 
+// Make player owner of property (expecting owner user_id, game_id, user_id)
+const setPropertyOwner = async (game_id, user_id, property_id) => {
+  const SET_OWNER_BOARD_SPACE_PROPERTY_INFO_SQL = `UPDATE board_spaces SET property_owner=$1 AND property_owned=true WHERE game_id=$2 AND user_id=$3`;
+  await db.none(SET_OWNER_BOARD_SPACE_PROPERTY_INFO_SQL, [
+    user_id,
+    game_id,
+    user_id,
+  ]);
+};
+
 // Remove owner from property (expecting owner user_id, game_id, user_id)
 const removePropertyOwner = async (game_id, user_id, property_id) => {
   const REMOVE_OWNER_BOARD_SPACE_PROPERTY_INFO_SQL = `UPDATE board_spaces SET property_owner=$1 AND property_owned=true WHERE game_id=$2 AND user_id=$3`;
@@ -407,17 +442,38 @@ const removePropertyOwner = async (game_id, user_id, property_id) => {
   ]);
 };
 
-// When a player rolls doubles
-const getSnakeEyes = async (game_id, user_id) => {
-  const GET_SNAKE_EYES_SQL = `SELECT dice_doubles_count FROM game_users WHERE game_id=$1 AND user_id=$2`;
-  const snake_eyes = await db.one(GET_SNAKE_EYES_SQL, [game_id, user_id]);
-  return snake_eyes.dice_doubles_count;
+const getNumRailroadsOwned = async (game_id, user_id) => {
+  const GET_NUM_RAILROADS_OWNED_SQL = `SELECT railroads_owned FROM property_inventory WHERE game_id=$1 AND user_id=$2`;
+  const num_railroads_owned = await db.one(GET_NUM_RAILROADS_OWNED_SQL, [
+    game_id,
+    user_id,
+  ]);
+  return num_railroads_owned;
+};
+
+const getNumUtilitiesOwned = async (game_id, user_id) => {
+  const GET_NUM_UTILITIES_OWNED_SQL = `SELECT utilities_owned FROM property_inventory WHERE game_id=$1 AND user_id=$2`;
+  const num_utilities_owned = await db.one(GET_NUM_UTILITIES_OWNED_SQL, [
+    game_id,
+    user_id,
+  ]);
+  return num_utilities_owned;
+};
+
+// Get number of dice doubles rolled by player
+const getSnakeEyesCount = async (game_id, user_id) => {
+  const GET_SNAKE_EYES_COUNT_SQL = `SELECT dice_doubles_count FROM game_users WHERE game_id=$1 AND user_id=$2`;
+  const snake_eyes_count = await db.one(GET_SNAKE_EYES_COUNT_SQL, [
+    game_id,
+    user_id,
+  ]);
+  return snake_eyes_count.dice_doubles_count;
 };
 
 // When a player rolls doubles
-const updateSnakeEyes = async (game_id, user_id) => {
-  const UPDATE_SNAKE_EYES_SQL = `UPDATE game_users SET dice_doubles_count=dice_doubles_count+1 WHERE game_id=$1 AND user_id=$2`;
-  await db.none(UPDATE_SNAKE_EYES_SQL, [game_id, user_id]);
+const updateSnakeEyesCount = async (game_id, user_id) => {
+  const UPDATE_SNAKE_EYES_COUNT_SQL = `UPDATE game_users SET dice_doubles_count=dice_doubles_count+1 WHERE game_id=$1 AND user_id=$2`;
+  await db.none(UPDATE_SNAKE_EYES_COUNT_SQL, [game_id, user_id]);
 };
 
 const setMortgaged = async (game_id, user_id, property_id) => {
@@ -428,6 +484,26 @@ const setMortgaged = async (game_id, user_id, property_id) => {
 const setUnmortaged = async (game_id, user_id, property_id) => {
   const SET_UNMORTGAGED_SQL = `UPDATE board_spaces SET mortgaged=false WHERE game_id=$1 AND user_id=$2 AND property_id=$3`;
   await db.none(SET_UNMORTGAGED_SQL, [game_id, user_id, property_id]);
+};
+
+// TODO: Read from the property_info table from the current game_id being played
+const getMortgagePayout = async (board_position) => {
+  const GET_MORTGAGE_PAYOUT_SQL = `SELECT mortgage_payout FROM property_info WHERE board_position=$1`;
+  const mortgage_payout = await db.one(GET_MORTGAGE_PAYOUT_SQL, [
+    board_position,
+  ]);
+  return mortgage_payout;
+};
+
+const updateFreeParkingPayout = async (amount, game_id) => {
+  const UPDATE_FREE_PARKING_PAYOUT_SQL = `UPDATE games SET free_parking_payout=$1 WHERE game_id=$2`;
+  await db.none(UPDATE_FREE_PARKING_PAYOUT_SQL, [amount, game_id]);
+};
+
+// When a player loses
+const updateAliveStatus = async (game_id, user_id) => {
+  const UPDATE_ALIVE_STATUS_SQL = `UPDATE game_users SET alive=false WHERE game_id=$1 AND user_id=$2`;
+  await db.none(UPDATE_ALIVE_STATUS_SQL, [game_id, user_id]);
 };
 
 module.exports = {
@@ -441,4 +517,5 @@ module.exports = {
   state,
   getBoardPosition,
   updateBalance,
+  isPlayerTurn,
 };

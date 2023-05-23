@@ -1,0 +1,23 @@
+<dialog class="turn-popup" id="turn-popup">
+    <div class="turn-options">
+        <div class="options-section">
+            <a class="turn-option" id="roll-dice">Roll Dice</a>
+        </div>
+        <div class="options-section">
+            <a class="turn-option">Rent Property</a>
+            <a class="turn-option">Sell Property</a>
+        </div>
+        <div class="options-section">
+            <a class="turn-option">End Turn</a>
+        </div>
+        <button class="primary-button" onclick="document.getElementById('turn-popup').close();">Close</button>
+    </div>
+</dialog>
+
+<script>
+    document.getElementById('roll-dice').addEventListener('click', () => {
+        console.log("roll dice");
+        document.getElementById('turn-popup').close();
+        document.getElementById('dice-roll-popup').showModal();
+    });
+</script>

@@ -64,7 +64,7 @@ app.use((request, response, next) => {
 });
 */
 
-// App setup (?)
+// App setup
 const port = process.env.PORT || 3000;
 
 app.set("views", path.join(".", "backend", "views"));

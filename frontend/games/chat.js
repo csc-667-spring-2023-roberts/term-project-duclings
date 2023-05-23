@@ -29,17 +29,6 @@ export function messageReceivedHandler(socket) {
             </span>
           </div>`
       );
-
-      // const displayName = document.createElement("span");
-      // displayName.innerText = username;
-      // const displayMessage = document.createElement("span");
-      // displayMessage.innerText = message;
-      // const displayTimestamp = document.createElement("span");
-      // displayTimestamp.innerText = timestamp;
-
-      // entry.appendChild(displayName, displayMessage, displayTimestamp);
-
-      // messageContainer.append(entry, displayMessage, displayTimestamp);
     }
   );
 }
@@ -59,4 +48,5 @@ document
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ message }),
     });
+    event.target.value = "";
   });
