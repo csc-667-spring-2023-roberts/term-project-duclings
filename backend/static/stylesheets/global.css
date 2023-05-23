@@ -425,3 +425,11 @@ a {
 .turn-options button {
   margin-top: 8px;
 }
+
+.players-list {
+  position: absolute;
+  left: 16px;
+  top: calc(100vh / 2);
+  transform: translateY(-50%);
+  font-family: var(--body-font);
+}

@@ -476,6 +476,34 @@ const updateSnakeEyesCount = async (game_id, user_id) => {
   await db.none(UPDATE_SNAKE_EYES_COUNT_SQL, [game_id, user_id]);
 };
 
+const getRandomChanceCard = async (deck_id, game_id) => {
+  const GET_RANDOM_CHANCE_CARD_SQL = `SELECT card_id, card_text, action_type, action_data
+  FROM chance_deck
+  WHERE deck_id=$1 AND game_id=$2
+  ORDER BY RANDOM()
+  LIMIT 1;
+  `;
+  const random_chance_card = await db.one(GET_RANDOM_CHANCE_CARD_SQL, [
+    deck_id,
+    game_id,
+  ]);
+  return random_chance_card;
+};
+
+const getRandomCommunityChestCard = async (deck_id, game_id) => {
+  const GET_RANDOM_COMMUNITY_CHEST_CARD_SQL = `SELECT card_id, card_text, action_type, action_data
+  FROM community_chest_deck
+  WHERE deck_id=$1 AND game_id=$2
+  ORDER BY RANDOM()
+  LIMIT 1;
+  `;
+  const random_chance_card = await db.one(GET_RANDOM_COMMUNITY_CHEST_CARD_SQL, [
+    deck_id,
+    game_id,
+  ]);
+  return random_community_chest_card;
+};
+
 const setMortgaged = async (game_id, user_id, property_id) => {
   const SET_MORTGAGED_SQL = `UPDATE board_spaces SET mortgaged=true WHERE game_id=$1 AND user_id=$2 AND property_id=$3`;
   await db.none(SET_MORTGAGED_SQL, [game_id, user_id, property_id]);

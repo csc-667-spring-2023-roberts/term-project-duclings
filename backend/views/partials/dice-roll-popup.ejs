@@ -51,9 +51,11 @@
         
         <div class="button-container">
             <button id="roll-button" class="primary-button">Roll</button>
-            <button style="display: none;" id="close-button" class="close primary-button" onclick="document.getElementById('dice-roll-popup').close();">
-                Close
-            </button>
+            <form action="/api/games/<%= id %>/startTurn" method="POST">
+                <button style="display: none;" id="close-button" class="close primary-button" onclick="document.getElementById('dice-roll-popup').close();">
+                    Close
+                </button>
+            </form>
         </div>
     </div>
 </dialog>

@@ -145,9 +145,9 @@ router.post("/:id/startTurn", async (request, response) => {
     const state = await Games.state(game_id, user_id);
     response.redirect(`/games/${game_id}`);
 
-    io.to(game_id).emit(GAME_UPDATED, state);
+    io.in(game_id).emit(GAME_UPDATED, state);
 
-    response.status(200).send();
+    response.end();
   } catch (error) {
     console.log({ error });
 
